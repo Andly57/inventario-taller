@@ -85,7 +85,6 @@
         .stat-lbl { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-num { font-size: 1.4rem; font-weight: 800; margin-top: 4px; color: var(--text-main); }
         .stat-num.primary { color: var(--primary); }
-        .stat-num.success { color: var(--success); }
 
         /* Scanner Hero Section */
         .scanner-hero { border: 2px solid var(--primary); background: var(--bg-card); position: relative; }
@@ -127,7 +126,6 @@
         th, td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
         th { background: var(--th-bg); font-weight: 600; position: sticky; top: 0; z-index: 2; cursor: pointer; }
         .text-center { text-align: center; }
-        .text-right { text-align: right; }
 
         .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
         .badge-exc { background: var(--badge-exc-bg); color: var(--badge-exc-color); }
@@ -231,11 +229,6 @@
                     <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()">⚙️</button>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="cost">Valor / Costo (S/.):</label>
-                <input type="number" id="cost" placeholder="S/. 0.00" step="0.01" min="0">
-            </div>
         </div>
 
         <button type="button" class="toggle-adv" onclick="toggleAdvancedFields()">
@@ -243,7 +236,7 @@
         </button>
 
         <div class="advanced-fields" id="advancedFields">
-            <div class="form-group" style="grid-column: span 3;">
+            <div class="form-group" style="grid-column: 1 / -1;">
                 <label for="notes">Observaciones:</label>
                 <input type="text" id="notes" placeholder="Ej: Calibrada recientemente, mango reforzado...">
             </div>
@@ -283,7 +276,6 @@
                             <th onclick="sortTable('toolName')">Herramienta</th>
                             <th onclick="sortTable('status')">Estado</th>
                             <th onclick="sortTable('location')">Ubicación</th>
-                            <th onclick="sortTable('cost')" class="text-right">Valor (S/.)</th>
                             <th>Notas</th>
                             <th class="text-center admin-only" style="width: 110px;">Acciones</th>
                         </tr>
@@ -418,7 +410,7 @@
         console.warn("Error inicializando Firebase:", e);
     }
 
-    const ADMIN_PASS = "admin"; // Contraseña de acceso para administrador
+    const ADMIN_PASS = "MPI-IPM-2026-6202"; // Contraseña de acceso para administrador
     let currentRole = null;
     let inventoryItems = [];
     let toolsList = ["Alicate", "Destornillador", "Gato Hidráulico", "Juego de Dados", "Llave Inglesa", "Martillo", "Pistola Neumática", "Taladro"];
@@ -525,13 +517,12 @@
         const toolName = document.getElementById('toolName').value;
         const status = document.getElementById('status').value;
         const location = document.getElementById('location').value;
-        const cost = parseFloat(document.getElementById('cost').value) || 0;
         const notes = document.getElementById('notes').value.trim() || "-";
 
         const now = new Date();
         const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-        const newItem = { timestamp, barcode, toolName, status, location, cost, notes };
+        const newItem = { timestamp, barcode, toolName, status, location, notes };
 
         if (db) {
             db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).set(newItem);
@@ -542,7 +533,6 @@
         }
 
         barcodeInput.value = '';
-        document.getElementById('cost').value = '';
         document.getElementById('notes').value = '';
         barcodeInput.focus();
     }
@@ -582,15 +572,10 @@
 
     function renderStats() {
         const total = inventoryItems.length;
-        const totalVal = inventoryItems.reduce((acc, i) => acc + (parseFloat(i.cost) || 0), 0);
         document.getElementById('statsBar').innerHTML = `
             <div class="stat-item">
-                <div class="stat-lbl">Herramientas Totales</div>
+                <div class="stat-lbl">Herramientas Registradas</div>
                 <div class="stat-num primary">${total}</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-lbl">Valor Total (S/.)</div>
-                <div class="stat-num success">S/. ${totalVal.toFixed(2)}</div>
             </div>
         `;
     }
@@ -603,23 +588,22 @@
 
         let headerRow = '<tr><th>Herramienta</th>';
         statusesList.forEach(st => headerRow += `<th class="text-center">${st}</th>`);
-        headerRow += '<th class="text-center">Total</th><th class="text-right">Valor Total (S/.)</th></tr>';
+        headerRow += '<th class="text-center">Total</th></tr>';
         header.innerHTML = headerRow;
 
         if (inventoryItems.length === 0) {
-            body.innerHTML = `<tr><td colspan="${statusesList.length + 3}" class="text-center" style="color:var(--text-muted);">No hay herramientas registradas</td></tr>`;
+            body.innerHTML = `<tr><td colspan="${statusesList.length + 2}" class="text-center" style="color:var(--text-muted);">No hay herramientas registradas</td></tr>`;
             return;
         }
 
         const counts = {};
         inventoryItems.forEach(i => {
             if (!counts[i.toolName]) {
-                counts[i.toolName] = { total: 0, val: 0 };
+                counts[i.toolName] = { total: 0 };
                 statusesList.forEach(st => counts[i.toolName][st] = 0);
             }
             if (counts[i.toolName][i.status] !== undefined) counts[i.toolName][i.status]++;
             counts[i.toolName].total++;
-            counts[i.toolName].val += (parseFloat(i.cost) || 0);
         });
 
         Object.keys(counts).forEach(tool => {
@@ -634,10 +618,6 @@
             cTot.className = "text-center";
             cTot.style.fontWeight = "bold";
             cTot.textContent = counts[tool].total;
-
-            const cVal = row.insertCell(statusesList.length + 2);
-            cVal.className = "text-right";
-            cVal.textContent = `S/. ${counts[tool].val.toFixed(2)}`;
         });
     }
 
@@ -670,7 +650,7 @@
         document.getElementById('tabCount').textContent = filteredItemsCache.length;
 
         if (filteredItemsCache.length === 0) {
-            body.innerHTML = `<tr><td colspan="${currentRole === 'admin' ? 8 : 7}" class="text-center" style="color:var(--text-muted);">No se encontraron herramientas</td></tr>`;
+            body.innerHTML = `<tr><td colspan="${currentRole === 'admin' ? 7 : 6}" class="text-center" style="color:var(--text-muted);">No se encontraron herramientas</td></tr>`;
             return;
         }
 
@@ -681,14 +661,10 @@
             row.insertCell(2).textContent = item.toolName;
             row.insertCell(3).innerHTML = `<span class="badge ${getBadgeClass(item.status)}">${item.status}</span>`;
             row.insertCell(4).textContent = item.location || "-";
-            
-            const valCell = row.insertCell(5);
-            valCell.className = "text-right";
-            valCell.textContent = `S/. ${(parseFloat(item.cost) || 0).toFixed(2)}`;
-            row.insertCell(6).textContent = item.notes || "-";
+            row.insertCell(5).textContent = item.notes || "-";
 
             if (currentRole === 'admin') {
-                const actCell = row.insertCell(7);
+                const actCell = row.insertCell(6);
                 actCell.className = "text-center admin-only";
                 actCell.innerHTML = `<button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteItem('${item.barcode}')">🗑️ Borrar</button>`;
             }
@@ -814,9 +790,9 @@
 
     function exportToCSV() {
         if (inventoryItems.length === 0) { alert("No hay datos para exportar."); return; }
-        let csv = "sep=;\nFechaHora;Codigo;Herramienta;Estado;Ubicacion;Costo(S/.);Observaciones\n";
+        let csv = "sep=;\nFechaHora;Codigo;Herramienta;Estado;Ubicacion;Observaciones\n";
         inventoryItems.forEach(i => {
-            csv += `"${i.timestamp}";="${i.barcode}";"${i.toolName}";"${i.status}";"${i.location}";${i.cost || 0};"${i.notes || '-'}"\n`;
+            csv += `"${i.timestamp}";="${i.barcode}";"${i.toolName}";"${i.status}";"${i.location}";"${i.notes || '-'}"\n`;
         });
         const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
