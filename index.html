@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario y Control - Taller Mecánico</title>
+    <!-- Librería de Códigos de Barras JsBarcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- SDKs de Firebase (Compatibilidad directa vía CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --badge-exc-bg: #ecfdf5;
+            --badge-exc-color: #047857;
+            --badge-mod-bg: #fffbeb;
+            --badge-mod-color: #b45309;
+            --badge-bad-bg: #fef2f2;
+            --badge-bad-color: #b91c1c;
+            --badge-gen-bg: #f1f5f9;
+            --badge-gen-color: #475569;
+            --th-bg: #f1f5f9;
+        }
+
+        body.dark-mode {
+            --bg-body: #090d16;
+            --bg-card: #131b2e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --input-bg: #0b1120;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #f87171;
+            --badge-exc-bg: #064e3b;
+            --badge-exc-color: #a7f3d0;
+            --badge-mod-bg: #78350f;
+            --badge-mod-color: #fde68a;
+            --badge-bad-bg: #7f1d1d;
+            --badge-bad-color: #fecaca;
+            --badge-gen-bg: #1e293b;
+            --badge-gen-color: #cbd5e1;
+            --th-bg: #0f172a;
+        }
+
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1100px; margin: auto; display: flex; flex-direction: column; gap: 16px; }
+        .hidden { display: none !important; }
+
+        /* Login */
+        .login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+        .login-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
+        .login-card h2 { margin-top: 0; font-size: 1.4rem; }
+        .login-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+
+        /* Top Header */
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+        .brand h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
+        .brand p { margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-muted); }
+        .nav-actions { display: flex; gap: 8px; align-items: center; }
+
+        /* General Card */
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-title { font-size: 1rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+
+        /* KPI / Stat Bar */
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+        .stat-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; text-align: left; }
+        .stat-lbl { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-num { font-size: 1.4rem; font-weight: 800; margin-top: 4px; color: var(--text-main); }
+        .stat-num.primary { color: var(--primary); }
+        .stat-num.success { color: var(--success); }
+
+        /* Scanner Hero Section */
+        .scanner-hero { border: 2px solid var(--primary); background: var(--bg-card); position: relative; }
+        .scanner-input-box { position: relative; margin-bottom: 15px; }
+        .barcode-huge { font-size: 1.15rem; font-weight: 600; letter-spacing: 1px; padding: 12px 14px 12px 42px; border-radius: 8px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-main); width: 100%; }
+        .barcode-huge:focus { border-color: var(--primary); outline: none; background-color: var(--bg-card); box-shadow: 0 0 0 4px rgba(37,99,235,0.12); }
+        .scanner-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
+
+        /* Field Grid */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+        
+        input, select { width: 100%; padding: 8px 10px; background-color: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.88rem; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; background-color: var(--bg-card); }
+        .input-with-btn { display: flex; gap: 5px; }
+
+        .advanced-fields { display: none; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border-color); }
+        .toggle-adv { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 0; margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; width: fit-content; }
+
+        /* Buttons & Actions */
+        .actions-row { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
+        .btn { padding: 9px 15px; border-radius: 6px; font-size: 0.86rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.15s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-outline:hover { background: var(--border-color); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-sm { padding: 5px 9px; font-size: 0.78rem; border-radius: 5px; }
+
+        /* Tabs & Table */
+        .tabs-header { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 14px; }
+        .tab-btn { background: none; border: none; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 12px; }
+        .table-wrap { overflow-x: auto; max-height: 420px; border: 1px solid var(--border-color); border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left; }
+        th, td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
+        th { background: var(--th-bg); font-weight: 600; position: sticky; top: 0; z-index: 2; cursor: pointer; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
+        .badge-exc { background: var(--badge-exc-bg); color: var(--badge-exc-color); }
+        .badge-mod { background: var(--badge-mod-bg); color: var(--badge-mod-color); }
+        .badge-bad { background: var(--badge-bad-bg); color: var(--badge-bad-color); }
+        .badge-gen { background: var(--badge-gen-bg); color: var(--badge-gen-color); }
+        .badge-user { background: #d4edda; color: #155724; }
+        .badge-admin { background: #ffeeba; color: #856404; }
+
+        /* Modals */
+        .modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal { background: var(--bg-card); width: 92%; max-width: 580px; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 88vh; overflow-y: auto; }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        .modal-head h3 { margin: 0; font-size: 1.1rem; }
+        .mgmt-list { max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px; }
+        .mgmt-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-bottom: 1px solid var(--border-color); font-size: 0.84rem; }
+
+        /* Print Labels */
+        .printable-label { background: #ffffff !important; color: #000000 !important; padding: 8px 14px; text-align: center; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; margin: 4px; border: 1px dashed #cbd5e1; border-radius: 6px; }
+        .printable-label .lbl-header { font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; color: #000; }
+        #printContainer { display: none; }
+
+        @media print {
+            body { background: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; }
+            .container, .modal-bg { display: none !important; }
+            #printContainer { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .a4-sheet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 10mm; width: 100%; box-sizing: border-box; }
+            .thermal-roll-layout { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+            .thermal-roll-layout .printable-label { width: 90% !important; margin-bottom: 10px; page-break-after: always; break-after: page; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PANTALLA DE INICIO DE SESIÓN / SELECCIÓN DE ROL -->
+<div id="loginScreen" class="login-wrapper">
+    <div class="login-card">
+        <h2>🛠️ Taller Mecánico</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Selecciona tu perfil de acceso para ingresar al inventario</p>
+        <div class="login-btn-group">
+            <button class="btn btn-primary" onclick="loginAs('user')">👤 Ingresar como Usuario (Solo Búsqueda)</button>
+            <button class="btn btn-outline" onclick="showAdminPrompt()">🔒 Ingresar como Administrador</button>
+        </div>
+        <div id="adminPassBox" class="hidden" style="margin-top: 15px;">
+            <input type="password" id="adminPassInput" placeholder="Contraseña de Administrador">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px; justify-content: center;" onclick="verifyAdmin()">Acceder</button>
+            <p id="adminErrorMsg" style="color: var(--danger); font-size: 0.78rem; display: none; margin-top: 5px;">Contraseña incorrecta</p>
+        </div>
+    </div>
+</div>
+
+<!-- APLICACIÓN PRINCIPAL -->
+<div class="container hidden" id="appMain">
+    <header class="top-nav">
+        <div class="brand">
+            <h1>Taller Mecánico</h1>
+            <p>Control de Herramientas <span id="currentRoleBadge" class="badge"></span></p>
+        </div>
+        <div class="nav-actions">
+            <!-- Botón exclusivo de Admin -->
+            <button class="btn btn-primary btn-sm admin-only" onclick="openBatchGeneratorModal()">🏷️ Generar Códigos</button>
+            <button class="btn btn-outline btn-sm" onclick="toggleTheme()" id="themeBtn">Modo Oscuro</button>
+            <button class="btn btn-outline btn-sm" style="color: var(--danger);" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <section class="stats-bar" id="statsBar"></section>
+
+    <!-- Módulo de Entrada Rápida de Inventario (Solo Admin) -->
+    <section class="card scanner-hero admin-only" id="scannerSection">
+        <div class="card-header">
+            <h2 class="card-title"><span>Registrar / Escanear Activo</span></h2>
+        </div>
+
+        <div class="scanner-input-box">
+            <span class="scanner-icon">📷</span>
+            <input type="text" id="barcode" class="barcode-huge" placeholder="Escanea la etiqueta con el lector..." autofocus autocomplete="off">
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="toolName">Herramienta:</label>
+                <div class="input-with-btn">
+                    <select id="toolName"></select>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openToolManagerModal()">⚙️</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Estado:</label>
+                <div class="input-with-btn">
+                    <select id="status"></select>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openStatusManagerModal()">⚙️</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Ubicación / Gaveta:</label>
+                <div class="input-with-btn">
+                    <select id="location"></select>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()">⚙️</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cost">Valor / Costo (S/.):</label>
+                <input type="number" id="cost" placeholder="S/. 0.00" step="0.01" min="0">
+            </div>
+        </div>
+
+        <button type="button" class="toggle-adv" onclick="toggleAdvancedFields()">
+            <span id="advToggleIcon">➕</span> Mostrar campos opcionales (Observaciones)
+        </button>
+
+        <div class="advanced-fields" id="advancedFields">
+            <div class="form-group" style="grid-column: span 3;">
+                <label for="notes">Observaciones:</label>
+                <input type="text" id="notes" placeholder="Ej: Calibrada recientemente, mango reforzado...">
+            </div>
+        </div>
+
+        <div class="actions-row">
+            <button class="btn btn-primary" onclick="saveData()">💾 Guardar Registro (Ctrl+Enter)</button>
+            <div style="display: flex; gap: 6px;">
+                <button class="btn btn-outline btn-sm" onclick="exportToCSV()">📊 Descargar Excel</button>
+                <button class="btn btn-outline btn-sm" style="color: var(--danger);" onclick="clearAllData()">🗑️ Vaciar Base de Datos</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visualización y Búsqueda (Tanto Usuario como Admin) -->
+    <section class="card">
+        <div class="tabs-header">
+            <button class="tab-btn active" id="tabBtnDetail" onclick="switchTab('detail')">📋 Consulta de Herramientas (<span id="tabCount">0</span>)</button>
+            <button class="tab-btn" id="tabBtnSummary" onclick="switchTab('summary')">📊 Resumen por Estado</button>
+        </div>
+
+        <div id="tabDetail">
+            <div class="filter-bar">
+                <input type="text" id="globalSearch" placeholder="🔍 Buscar código, herramienta, gaveta..." oninput="applyFilters()">
+                <select id="filterTool" onchange="applyFilters()"><option value="">Todas las Herramientas</option></select>
+                <select id="filterStatus" onchange="applyFilters()"><option value="">Todos los Estados</option></select>
+                <select id="filterLocation" onchange="applyFilters()"><option value="">Todas las Gavetas</option></select>
+                <button class="btn btn-outline btn-sm" onclick="resetFilters()">Limpiar</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('timestamp')">Fecha/Hora</th>
+                            <th onclick="sortTable('barcode')">Código</th>
+                            <th onclick="sortTable('toolName')">Herramienta</th>
+                            <th onclick="sortTable('status')">Estado</th>
+                            <th onclick="sortTable('location')">Ubicación</th>
+                            <th onclick="sortTable('cost')" class="text-right">Valor (S/.)</th>
+                            <th>Notas</th>
+                            <th class="text-center admin-only" style="width: 110px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tabSummary" style="display: none;">
+            <div class="table-wrap">
+                <table id="summaryTable">
+                    <thead id="summaryHeader"></thead>
+                    <tbody id="summaryBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="printContainer"></div>
+
+<!-- MODAL: GENERADOR MASIVO DE CÓDIGOS -->
+<div class="modal-bg" id="batchGeneratorModal">
+    <div class="modal" style="max-width: 620px;">
+        <div class="modal-head">
+            <h3>🏷️ Generador Masivo de Códigos de Barras</h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal('batchGeneratorModal')">✕</button>
+        </div>
+        <div class="form-grid" style="margin-bottom: 12px;">
+            <div class="form-group">
+                <label>Simbología:</label>
+                <select id="genSymbology" onchange="renderBatchPreview()">
+                    <option value="CODE39">Code 39 (Wasp Compatible)</option>
+                    <option value="CODE128">Code 128</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Cantidad de Etiquetas:</label>
+                <input type="number" id="genQuantity" value="24" min="1" max="500" oninput="renderBatchPreview()">
+            </div>
+            <div class="form-group">
+                <label>Formato:</label>
+                <select id="genFormat" onchange="renderBatchPreview()">
+                    <option value="a4">Hoja A4 (Plancha Múltiple)</option>
+                    <option value="thermal58">Rollo Térmico 58mm</option>
+                    <option value="thermal80">Rollo Térmico 80mm</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Prefijo:</label>
+                <input type="text" id="genPrefix" value="TLR" oninput="renderBatchPreview()">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Título en Etiqueta:</label>
+                <input type="text" id="genTitle" value="TALLER MECÁNICO" oninput="renderBatchPreview()">
+            </div>
+        </div>
+        <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 6px;">Vista Previa:</div>
+        <div style="border: 1px dashed var(--border-color); background: #f8fafc; padding: 15px; border-radius: 8px; max-height: 220px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;" id="batchPreviewBox"></div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
+            <button class="btn btn-outline" onclick="closeModal('batchGeneratorModal')">Cerrar</button>
+            <button class="btn btn-primary" onclick="printBatchGeneratedLabels()">🖨️ Mandar a Imprimir Todas</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: GESTIONAR HERRAMIENTAS -->
+<div class="modal-bg" id="toolManagerModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Gestionar Herramientas</h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal('toolManagerModal')">✕</button>
+        </div>
+        <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+            <input type="text" id="newToolInput" placeholder="Nombre de herramienta...">
+            <button class="btn btn-primary btn-sm" onclick="addToolFromModal()">Agregar</button>
+        </div>
+        <div class="mgmt-list" id="toolMgmtList"></div>
+    </div>
+</div>
+
+<!-- MODAL: GESTIONAR ESTADOS -->
+<div class="modal-bg" id="statusManagerModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Gestionar Estados</h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal('statusManagerModal')">✕</button>
+        </div>
+        <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+            <input type="text" id="newStatusInput" placeholder="Nuevo estado...">
+            <button class="btn btn-primary btn-sm" onclick="addStatusFromModal()">Agregar</button>
+        </div>
+        <div class="mgmt-list" id="statusMgmtList"></div>
+    </div>
+</div>
+
+<!-- MODAL: GESTIONAR UBICACIONES -->
+<div class="modal-bg" id="locationManagerModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Gestionar Gavetas / Ubicaciones</h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal('locationManagerModal')">✕</button>
+        </div>
+        <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+            <input type="text" id="newLocationInput" placeholder="Nueva gaveta...">
+            <button class="btn btn-primary btn-sm" onclick="addLocationFromModal()">Agregar</button>
+        </div>
+        <div class="mgmt-list" id="locationMgmtList"></div>
+    </div>
+</div>
+
+<script>
+    // Configuración oficial de Firebase vinculada
+    const firebaseConfig = {
+        apiKey: "AIzaSyDrXRPbrOw36BzfOAklEzh3paO-yMGKjBI",
+        authDomain: "taller-inventario-3e605.firebaseapp.com",
+        databaseURL: "https://taller-inventario-3e605-default-rtdb.firebaseio.com",
+        projectId: "taller-inventario-3e605",
+        storageBucket: "taller-inventario-3e605.firebasestorage.app",
+        messagingSenderId: "673816590871",
+        appId: "1:673816590871:web:09a9800b73dfa0f6757a52",
+        measurementId: "G-GRPSHK8BJ2"
+    };
+
+    // Inicializar Firebase Realtime Database
+    let db = null;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+    } catch (e) {
+        console.warn("Error inicializando Firebase:", e);
+    }
+
+    const ADMIN_PASS = "admin"; // Contraseña de acceso para administrador
+    let currentRole = null;
+    let inventoryItems = [];
+    let toolsList = ["Alicate", "Destornillador", "Gato Hidráulico", "Juego de Dados", "Llave Inglesa", "Martillo", "Pistola Neumática", "Taladro"];
+    let statusesList = ["Excelente", "Moderado", "Mal estado", "En Mantenimiento"];
+    let locationsList = ["Caja 1", "Caja 2", "Estante A", "Estante B", "Gaveta Móvil", "Mesa Principal"];
+
+    let sortColumn = 'timestamp';
+    let sortDirection = 'desc';
+    let filteredItemsCache = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initTheme();
+        initDataListeners();
+    });
+
+    // 1. SINCRONIZACIÓN EN TIEMPO REAL CON FIREBASE
+    function initDataListeners() {
+        if (db) {
+            db.ref("taller/inventory").on("value", (snap) => {
+                const val = snap.val();
+                inventoryItems = val ? Object.values(val) : [];
+                render();
+            });
+            db.ref("taller/tools").on("value", (snap) => {
+                const val = snap.val();
+                if (val) toolsList = val;
+                loadAllSelects();
+            });
+            db.ref("taller/statuses").on("value", (snap) => {
+                const val = snap.val();
+                if (val) statusesList = val;
+                loadAllSelects();
+            });
+            db.ref("taller/locations").on("value", (snap) => {
+                const val = snap.val();
+                if (val) locationsList = val;
+                loadAllSelects();
+            });
+        } else {
+            inventoryItems = JSON.parse(localStorage.getItem('taller_inventory')) || [];
+            render();
+            loadAllSelects();
+        }
+    }
+
+    // 2. ROLES Y ACCESOS
+    function showAdminPrompt() {
+        document.getElementById('adminPassBox').classList.remove('hidden');
+        document.getElementById('adminPassInput').focus();
+    }
+
+    function verifyAdmin() {
+        const pass = document.getElementById('adminPassInput').value;
+        if (pass === ADMIN_PASS) {
+            document.getElementById('adminErrorMsg').style.display = 'none';
+            loginAs('admin');
+        } else {
+            document.getElementById('adminErrorMsg').style.display = 'block';
+        }
+    }
+
+    function loginAs(role) {
+        currentRole = role;
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('appMain').classList.remove('hidden');
+
+        const roleBadge = document.getElementById('currentRoleBadge');
+        if (role === 'admin') {
+            roleBadge.textContent = "Perfil: Administrador";
+            roleBadge.className = "badge badge-admin";
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+        } else {
+            roleBadge.textContent = "Perfil: Usuario (Solo Lectura)";
+            roleBadge.className = "badge badge-user";
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
+        }
+
+        render();
+        if (role === 'admin') {
+            document.getElementById('barcode').focus();
+        }
+    }
+
+    function logout() {
+        currentRole = null;
+        document.getElementById('adminPassInput').value = '';
+        document.getElementById('adminPassBox').classList.add('hidden');
+        document.getElementById('appMain').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    // 3. REGISTRO Y GESTIÓN EN FIREBASE
+    function saveData() {
+        if (currentRole !== 'admin') return;
+        const barcodeInput = document.getElementById('barcode');
+        const barcode = barcodeInput.value.trim();
+
+        if (!barcode) {
+            alert("Escanea o ingresa un código.");
+            barcodeInput.focus();
+            return;
+        }
+
+        const toolName = document.getElementById('toolName').value;
+        const status = document.getElementById('status').value;
+        const location = document.getElementById('location').value;
+        const cost = parseFloat(document.getElementById('cost').value) || 0;
+        const notes = document.getElementById('notes').value.trim() || "-";
+
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        const newItem = { timestamp, barcode, toolName, status, location, cost, notes };
+
+        if (db) {
+            db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).set(newItem);
+        } else {
+            inventoryItems.unshift(newItem);
+            localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
+            render();
+        }
+
+        barcodeInput.value = '';
+        document.getElementById('cost').value = '';
+        document.getElementById('notes').value = '';
+        barcodeInput.focus();
+    }
+
+    function deleteItem(barcode) {
+        if (currentRole !== 'admin') return;
+        if (confirm(`¿Eliminar el registro con código ${barcode}?`)) {
+            if (db) {
+                db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).remove();
+            } else {
+                inventoryItems = inventoryItems.filter(i => i.barcode !== barcode);
+                localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
+                render();
+            }
+        }
+    }
+
+    function clearAllData() {
+        if (currentRole !== 'admin') return;
+        if (confirm("⚠️ ¿Estás seguro de BORRAR TODO el inventario de la base de datos?")) {
+            if (db) {
+                db.ref("taller/inventory").remove();
+            } else {
+                inventoryItems = [];
+                localStorage.removeItem('taller_inventory');
+                render();
+            }
+        }
+    }
+
+    // 4. TABLAS Y FILTROS
+    function render() {
+        renderStats();
+        renderSummaryTable();
+        applyFilters();
+    }
+
+    function renderStats() {
+        const total = inventoryItems.length;
+        const totalVal = inventoryItems.reduce((acc, i) => acc + (parseFloat(i.cost) || 0), 0);
+        document.getElementById('statsBar').innerHTML = `
+            <div class="stat-item">
+                <div class="stat-lbl">Herramientas Totales</div>
+                <div class="stat-num primary">${total}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-lbl">Valor Total (S/.)</div>
+                <div class="stat-num success">S/. ${totalVal.toFixed(2)}</div>
+            </div>
+        `;
+    }
+
+    function renderSummaryTable() {
+        const header = document.getElementById('summaryHeader');
+        const body = document.getElementById('summaryBody');
+        header.innerHTML = '';
+        body.innerHTML = '';
+
+        let headerRow = '<tr><th>Herramienta</th>';
+        statusesList.forEach(st => headerRow += `<th class="text-center">${st}</th>`);
+        headerRow += '<th class="text-center">Total</th><th class="text-right">Valor Total (S/.)</th></tr>';
+        header.innerHTML = headerRow;
+
+        if (inventoryItems.length === 0) {
+            body.innerHTML = `<tr><td colspan="${statusesList.length + 3}" class="text-center" style="color:var(--text-muted);">No hay herramientas registradas</td></tr>`;
+            return;
+        }
+
+        const counts = {};
+        inventoryItems.forEach(i => {
+            if (!counts[i.toolName]) {
+                counts[i.toolName] = { total: 0, val: 0 };
+                statusesList.forEach(st => counts[i.toolName][st] = 0);
+            }
+            if (counts[i.toolName][i.status] !== undefined) counts[i.toolName][i.status]++;
+            counts[i.toolName].total++;
+            counts[i.toolName].val += (parseFloat(i.cost) || 0);
+        });
+
+        Object.keys(counts).forEach(tool => {
+            const row = body.insertRow();
+            row.insertCell(0).textContent = tool;
+            statusesList.forEach((st, sIdx) => {
+                const cell = row.insertCell(sIdx + 1);
+                cell.className = "text-center";
+                cell.innerHTML = `<span class="badge ${getBadgeClass(st)}">${counts[tool][st] || 0}</span>`;
+            });
+            const cTot = row.insertCell(statusesList.length + 1);
+            cTot.className = "text-center";
+            cTot.style.fontWeight = "bold";
+            cTot.textContent = counts[tool].total;
+
+            const cVal = row.insertCell(statusesList.length + 2);
+            cVal.className = "text-right";
+            cVal.textContent = `S/. ${counts[tool].val.toFixed(2)}`;
+        });
+    }
+
+    function applyFilters() {
+        const search = document.getElementById('globalSearch').value.toLowerCase().trim();
+        const fTool = document.getElementById('filterTool').value;
+        const fStatus = document.getElementById('filterStatus').value;
+        const fLoc = document.getElementById('filterLocation').value;
+
+        filteredItemsCache = inventoryItems.filter(item => {
+            const matchSearch = !search || 
+                item.barcode.toLowerCase().includes(search) || 
+                item.toolName.toLowerCase().includes(search) || 
+                (item.notes && item.notes.toLowerCase().includes(search)) ||
+                (item.location && item.location.toLowerCase().includes(search));
+
+            const matchTool = !fTool || item.toolName === fTool;
+            const matchStatus = !fStatus || item.status === fStatus;
+            const matchLoc = !fLoc || item.location === fLoc;
+
+            return matchSearch && matchTool && matchStatus && matchLoc;
+        });
+
+        renderDetailTable();
+    }
+
+    function renderDetailTable() {
+        const body = document.getElementById('detailBody');
+        body.innerHTML = '';
+        document.getElementById('tabCount').textContent = filteredItemsCache.length;
+
+        if (filteredItemsCache.length === 0) {
+            body.innerHTML = `<tr><td colspan="${currentRole === 'admin' ? 8 : 7}" class="text-center" style="color:var(--text-muted);">No se encontraron herramientas</td></tr>`;
+            return;
+        }
+
+        filteredItemsCache.forEach(item => {
+            const row = body.insertRow();
+            row.insertCell(0).textContent = item.timestamp;
+            row.insertCell(1).innerHTML = `<strong>${item.barcode}</strong>`;
+            row.insertCell(2).textContent = item.toolName;
+            row.insertCell(3).innerHTML = `<span class="badge ${getBadgeClass(item.status)}">${item.status}</span>`;
+            row.insertCell(4).textContent = item.location || "-";
+            
+            const valCell = row.insertCell(5);
+            valCell.className = "text-right";
+            valCell.textContent = `S/. ${(parseFloat(item.cost) || 0).toFixed(2)}`;
+            row.insertCell(6).textContent = item.notes || "-";
+
+            if (currentRole === 'admin') {
+                const actCell = row.insertCell(7);
+                actCell.className = "text-center admin-only";
+                actCell.innerHTML = `<button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteItem('${item.barcode}')">🗑️ Borrar</button>`;
+            }
+        });
+    }
+
+    // 5. GENERADOR MASIVO
+    function openBatchGeneratorModal() {
+        document.getElementById('batchGeneratorModal').style.display = 'flex';
+        renderBatchPreview();
+    }
+
+    function renderBatchPreview() {
+        const qty = parseInt(document.getElementById('genQuantity').value, 10) || 24;
+        const prefix = document.getElementById('genPrefix').value.trim();
+        const title = document.getElementById('genTitle').value.trim() || 'TALLER MECÁNICO';
+        const symbology = document.getElementById('genSymbology').value;
+        const box = document.getElementById('batchPreviewBox');
+        box.innerHTML = '';
+
+        for (let i = 0; i < Math.min(qty, 6); i++) {
+            const code = prefix ? `${prefix}-${Math.floor(100000 + Math.random() * 900000)}` : `${Math.floor(100000 + Math.random() * 900000)}`;
+            const card = document.createElement('div');
+            card.className = 'printable-label';
+            card.style.width = '145px';
+            card.innerHTML = `<div class="lbl-header">${title}</div><svg id="prev-svg-${i}"></svg>`;
+            box.appendChild(card);
+
+            try {
+                JsBarcode(`#prev-svg-${i}`, code, { format: symbology, width: 1.5, height: 38, fontSize: 11, margin: 8, displayValue: true });
+            } catch (e) {}
+        }
+    }
+
+    function printBatchGeneratedLabels() {
+        const qty = parseInt(document.getElementById('genQuantity').value, 10) || 24;
+        const prefix = document.getElementById('genPrefix').value.trim();
+        const title = document.getElementById('genTitle').value.trim() || 'TALLER MECÁNICO';
+        const format = document.getElementById('genFormat').value;
+        const symbology = document.getElementById('genSymbology').value;
+        const printBox = document.getElementById('printContainer');
+        printBox.innerHTML = '';
+
+        const codes = [];
+        for (let i = 0; i < qty; i++) {
+            codes.push(prefix ? `${prefix}-${Math.floor(100000 + Math.random() * 900000)}` : `${Math.floor(100000 + Math.random() * 900000)}`);
+        }
+
+        const containerDiv = document.createElement('div');
+        containerDiv.className = format === 'a4' ? 'a4-sheet-grid' : 'thermal-roll-layout';
+        printBox.appendChild(containerDiv);
+
+        codes.forEach((code, idx) => {
+            const label = document.createElement('div');
+            label.className = 'printable-label';
+            if (format === 'thermal58') label.style.width = '52mm';
+            if (format === 'thermal80') label.style.width = '74mm';
+            label.innerHTML = `<div class="lbl-header">${title}</div><svg id="print-svg-${idx}"></svg>`;
+            containerDiv.appendChild(label);
+        });
+
+        codes.forEach((code, idx) => {
+            try {
+                JsBarcode(`#print-svg-${idx}`, code, { format: symbology, width: 1.6, height: 42, fontSize: 11, margin: 10, displayValue: true });
+            } catch (e) {}
+        });
+
+        setTimeout(() => window.print(), 150);
+    }
+
+    // UTILIDADES GENERALES
+    function populateSelect(id, array) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = '';
+        array.forEach(item => el.add(new Option(item, item)));
+    }
+
+    function loadAllSelects() {
+        populateSelect('toolName', toolsList);
+        populateSelect('status', statusesList);
+        populateSelect('location', locationsList);
+
+        populateSelect('filterTool', toolsList);
+        document.getElementById('filterTool').add(new Option("Todas las Herramientas", ""), 0);
+        document.getElementById('filterTool').value = "";
+
+        populateSelect('filterStatus', statusesList);
+        document.getElementById('filterStatus').add(new Option("Todos los Estados", ""), 0);
+        document.getElementById('filterStatus').value = "";
+
+        populateSelect('filterLocation', locationsList);
+        document.getElementById('filterLocation').add(new Option("Todas las Gavetas", ""), 0);
+        document.getElementById('filterLocation').value = "";
+    }
+
+    function getBadgeClass(st) {
+        if (st === "Excelente") return "badge-exc";
+        if (st === "Moderado") return "badge-mod";
+        if (st === "Mal estado") return "badge-bad";
+        return "badge-gen";
+    }
+
+    function toggleAdvancedFields() {
+        const adv = document.getElementById('advancedFields');
+        adv.style.display = adv.style.display === 'grid' ? 'none' : 'grid';
+    }
+
+    function switchTab(tab) {
+        document.getElementById('tabDetail').style.display = tab === 'detail' ? 'block' : 'none';
+        document.getElementById('tabSummary').style.display = tab === 'summary' ? 'block' : 'none';
+        document.getElementById('tabBtnDetail').classList.toggle('active', tab === 'detail');
+        document.getElementById('tabBtnSummary').classList.toggle('active', tab === 'summary');
+    }
+
+    function resetFilters() {
+        document.getElementById('globalSearch').value = '';
+        document.getElementById('filterTool').value = '';
+        document.getElementById('filterStatus').value = '';
+        document.getElementById('filterLocation').value = '';
+        applyFilters();
+    }
+
+    function exportToCSV() {
+        if (inventoryItems.length === 0) { alert("No hay datos para exportar."); return; }
+        let csv = "sep=;\nFechaHora;Codigo;Herramienta;Estado;Ubicacion;Costo(S/.);Observaciones\n";
+        inventoryItems.forEach(i => {
+            csv += `"${i.timestamp}";="${i.barcode}";"${i.toolName}";"${i.status}";"${i.location}";${i.cost || 0};"${i.notes || '-'}"\n`;
+        });
+        const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "inventario_taller.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('themeBtn').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+    }
+
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // Modales de listas
+    function openToolManagerModal() { document.getElementById('toolManagerModal').style.display = 'flex'; renderToolList(); }
+    function renderToolList() {
+        const container = document.getElementById('toolMgmtList');
+        container.innerHTML = '';
+        toolsList.forEach((t, idx) => {
+            const item = document.createElement('div');
+            item.className = 'mgmt-item';
+            item.innerHTML = `<span>${t}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteTool(${idx})">🗑️</button>`;
+            container.appendChild(item);
+        });
+    }
+    function addToolFromModal() {
+        const val = document.getElementById('newToolInput').value.trim();
+        if (!val) return;
+        toolsList.push(val);
+        if (db) db.ref("taller/tools").set(toolsList);
+        document.getElementById('newToolInput').value = '';
+        renderToolList();
+        loadAllSelects();
+    }
+    function deleteTool(idx) {
+        toolsList.splice(idx, 1);
+        if (db) db.ref("taller/tools").set(toolsList);
+        renderToolList();
+        loadAllSelects();
+    }
+
+    function openStatusManagerModal() { document.getElementById('statusManagerModal').style.display = 'flex'; renderStatusList(); }
+    function renderStatusList() {
+        const container = document.getElementById('statusMgmtList');
+        container.innerHTML = '';
+        statusesList.forEach((s, idx) => {
+            const item = document.createElement('div');
+            item.className = 'mgmt-item';
+            item.innerHTML = `<span>${s}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteStatus(${idx})">🗑️</button>`;
+            container.appendChild(item);
+        });
+    }
+    function addStatusFromModal() {
+        const val = document.getElementById('newStatusInput').value.trim();
+        if (!val) return;
+        statusesList.push(val);
+        if (db) db.ref("taller/statuses").set(statusesList);
+        document.getElementById('newStatusInput').value = '';
+        renderStatusList();
+        loadAllSelects();
+    }
+    function deleteStatus(idx) {
+        if (statusesList.length <= 1) { alert("Debe quedar al menos 1 estado."); return; }
+        statusesList.splice(idx, 1);
+        if (db) db.ref("taller/statuses").set(statusesList);
+        renderStatusList();
+        loadAllSelects();
+    }
+
+    function openLocationManagerModal() { document.getElementById('locationManagerModal').style.display = 'flex'; renderLocationList(); }
+    function renderLocationList() {
+        const container = document.getElementById('locationMgmtList');
+        container.innerHTML = '';
+        locationsList.forEach((l, idx) => {
+            const item = document.createElement('div');
+            item.className = 'mgmt-item';
+            item.innerHTML = `<span>${l}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteLocation(${idx})">🗑️</button>`;
+            container.appendChild(item);
+        });
+    }
+    function addLocationFromModal() {
+        const val = document.getElementById('newLocationInput').value.trim();
+        if (!val) return;
+        locationsList.push(val);
+        if (db) db.ref("taller/locations").set(locationsList);
+        document.getElementById('newLocationInput').value = '';
+        renderLocationList();
+        loadAllSelects();
+    }
+    function deleteLocation(idx) {
+        locationsList.splice(idx, 1);
+        if (db) db.ref("taller/locations").set(locationsList);
+        renderLocationList();
+        loadAllSelects();
+    }
+</script>
+</body>
+</html>
