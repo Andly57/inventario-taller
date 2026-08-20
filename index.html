@@ -58,40 +58,48 @@
         }
 
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.5; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.5; }
         .container { max-width: 1100px; margin: auto; display: flex; flex-direction: column; gap: 16px; }
         .hidden { display: none !important; }
 
+        /* SVG Icons */
+        .icon { display: inline-block; width: 16px; height: 16px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+        .icon-lg { width: 22px; height: 22px; }
+        .icon-xl { width: 36px; height: 36px; stroke-width: 1.75; }
+
         /* Login */
         .login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
-        .login-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
-        .login-card h2 { margin-top: 0; font-size: 1.4rem; }
-        .login-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .login-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 36px 30px; width: 100%; max-width: 420px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
+        .login-brand-icon { width: 56px; height: 56px; background: rgba(37,99,235,0.08); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--primary); }
+        .login-card h2 { margin: 0 0 6px 0; font-size: 1.35rem; font-weight: 700; }
+        .login-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
 
         /* Top Header */
         .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
-        .brand h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
-        .brand p { margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-muted); }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-icon-wrap { width: 40px; height: 40px; background: rgba(37,99,235,0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        .brand h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+        .brand p { margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
         .nav-actions { display: flex; gap: 8px; align-items: center; }
 
         /* General Card */
         .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-title { font-size: 1rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+        .card-title { font-size: 0.95rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
 
         /* KPI / Stat Bar */
         .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
         .stat-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; text-align: left; }
-        .stat-lbl { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-lbl { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-num { font-size: 1.4rem; font-weight: 800; margin-top: 4px; color: var(--text-main); }
         .stat-num.primary { color: var(--primary); }
 
         /* Scanner Hero Section */
         .scanner-hero { border: 2px solid var(--primary); background: var(--bg-card); position: relative; }
         .scanner-input-box { position: relative; margin-bottom: 15px; }
-        .barcode-huge { font-size: 1.15rem; font-weight: 600; letter-spacing: 1px; padding: 12px 14px 12px 42px; border-radius: 8px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-main); width: 100%; }
+        .barcode-huge { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; padding: 12px 14px 12px 42px; border-radius: 8px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-main); width: 100%; font-family: monospace; }
         .barcode-huge:focus { border-color: var(--primary); outline: none; background-color: var(--bg-card); box-shadow: 0 0 0 4px rgba(37,99,235,0.12); }
-        .scanner-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
+        .scanner-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; }
 
         /* Field Grid */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
@@ -103,11 +111,11 @@
         .input-with-btn { display: flex; gap: 5px; }
 
         .advanced-fields { display: none; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border-color); }
-        .toggle-adv { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 0; margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; width: fit-content; }
+        .toggle-adv { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 0; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; width: fit-content; }
 
         /* Buttons & Actions */
         .actions-row { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
-        .btn { padding: 9px 15px; border-radius: 6px; font-size: 0.86rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.15s; }
+        .btn { padding: 8px 14px; border-radius: 6px; font-size: 0.84rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: 0.15s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-hover); }
         .btn-outline { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); }
@@ -117,10 +125,14 @@
 
         /* Tabs & Table */
         .tabs-header { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 14px; }
-        .tab-btn { background: none; border: none; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab-btn { background: none; border: none; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
         .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 12px; }
+        .search-box { position: relative; }
+        .search-box input { padding-left: 32px; }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; }
+
         .table-wrap { overflow-x: auto; max-height: 420px; border: 1px solid var(--border-color); border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left; }
         th, td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
@@ -139,7 +151,7 @@
         .modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal { background: var(--bg-card); width: 92%; max-width: 580px; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 88vh; overflow-y: auto; }
         .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
-        .modal-head h3 { margin: 0; font-size: 1.1rem; }
+        .modal-head h3 { margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
         .mgmt-list { max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px; }
         .mgmt-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-bottom: 1px solid var(--border-color); font-size: 0.84rem; }
 
@@ -163,15 +175,26 @@
 <!-- PANTALLA DE INICIO DE SESIÓN / SELECCIÓN DE ROL -->
 <div id="loginScreen" class="login-wrapper">
     <div class="login-card">
-        <h2>🛠️ Taller Mecánico</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Selecciona tu perfil de acceso para ingresar al inventario</p>
-        <div class="login-btn-group">
-            <button class="btn btn-primary" onclick="loginAs('user')">👤 Ingresar como Usuario (Solo Búsqueda)</button>
-            <button class="btn btn-outline" onclick="showAdminPrompt()">🔒 Ingresar como Administrador</button>
+        <div class="login-brand-icon">
+            <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
         </div>
+        <h2>Sistema de Taller</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Control de inventario y gestión de herramientas</p>
+        
+        <div class="login-btn-group">
+            <button class="btn btn-primary" onclick="loginAs('user')">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Acceso Usuario (Solo Consulta)
+            </button>
+            <button class="btn btn-outline" onclick="showAdminPrompt()">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Acceso Administrador
+            </button>
+        </div>
+
         <div id="adminPassBox" class="hidden" style="margin-top: 15px;">
             <input type="password" id="adminPassInput" placeholder="Contraseña de Administrador">
-            <button class="btn btn-primary" style="width: 100%; margin-top: 8px; justify-content: center;" onclick="verifyAdmin()">Acceder</button>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="verifyAdmin()">Ingresar al Panel</button>
             <p id="adminErrorMsg" style="color: var(--danger); font-size: 0.78rem; display: none; margin-top: 5px;">Contraseña incorrecta</p>
         </div>
     </div>
@@ -181,14 +204,27 @@
 <div class="container hidden" id="appMain">
     <header class="top-nav">
         <div class="brand">
-            <h1>Taller Mecánico</h1>
-            <p>Control de Herramientas <span id="currentRoleBadge" class="badge"></span></p>
+            <div class="brand-icon-wrap">
+                <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            </div>
+            <div>
+                <h1>Taller Mecánico</h1>
+                <p>Control de Herramientas <span id="currentRoleBadge" class="badge"></span></p>
+            </div>
         </div>
         <div class="nav-actions">
-            <!-- Botón exclusivo de Admin -->
-            <button class="btn btn-primary btn-sm admin-only" onclick="openBatchGeneratorModal()">🏷️ Generar Códigos</button>
-            <button class="btn btn-outline btn-sm" onclick="toggleTheme()" id="themeBtn">Modo Oscuro</button>
-            <button class="btn btn-outline btn-sm" style="color: var(--danger);" onclick="logout()">Cerrar Sesión</button>
+            <button class="btn btn-primary btn-sm admin-only" onclick="openBatchGeneratorModal()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Generar Códigos
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="toggleTheme()" id="themeBtn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <span id="themeBtnText">Modo Oscuro</span>
+            </button>
+            <button class="btn btn-outline btn-sm" style="color: var(--danger);" onclick="logout()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Salir
+            </button>
         </div>
     </header>
 
@@ -197,11 +233,16 @@
     <!-- Módulo de Entrada Rápida de Inventario (Solo Admin) -->
     <section class="card scanner-hero admin-only" id="scannerSection">
         <div class="card-header">
-            <h2 class="card-title"><span>Registrar / Escanear Activo</span></h2>
+            <h2 class="card-title">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                <span>Registro de Activo / Escaneo</span>
+            </h2>
         </div>
 
         <div class="scanner-input-box">
-            <span class="scanner-icon">📷</span>
+            <span class="scanner-icon">
+                <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><line x1="7" y1="12" x2="17" y2="12"></line></svg>
+            </span>
             <input type="text" id="barcode" class="barcode-huge" placeholder="Escanea la etiqueta con el lector..." autofocus autocomplete="off">
         </div>
 
@@ -210,7 +251,9 @@
                 <label for="toolName">Herramienta:</label>
                 <div class="input-with-btn">
                     <select id="toolName"></select>
-                    <button type="button" class="btn btn-outline btn-sm" onclick="openToolManagerModal()">⚙️</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openToolManagerModal()" title="Configurar lista">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
                 </div>
             </div>
 
@@ -218,7 +261,9 @@
                 <label for="status">Estado:</label>
                 <div class="input-with-btn">
                     <select id="status"></select>
-                    <button type="button" class="btn btn-outline btn-sm" onclick="openStatusManagerModal()">⚙️</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openStatusManagerModal()" title="Configurar lista">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
                 </div>
             </div>
 
@@ -226,13 +271,16 @@
                 <label for="location">Ubicación / Gaveta:</label>
                 <div class="input-with-btn">
                     <select id="location"></select>
-                    <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()">⚙️</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()" title="Configurar lista">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
                 </div>
             </div>
         </div>
 
         <button type="button" class="toggle-adv" onclick="toggleAdvancedFields()">
-            <span id="advToggleIcon">➕</span> Mostrar campos opcionales (Observaciones)
+            <svg class="icon" viewBox="0 0 24 24" id="advToggleIcon"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Campos opcionales (Observaciones)</span>
         </button>
 
         <div class="advanced-fields" id="advancedFields">
@@ -243,10 +291,19 @@
         </div>
 
         <div class="actions-row">
-            <button class="btn btn-primary" onclick="saveData()">💾 Guardar Registro (Ctrl+Enter)</button>
+            <button class="btn btn-primary" onclick="saveData()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Guardar Registro
+            </button>
             <div style="display: flex; gap: 6px;">
-                <button class="btn btn-outline btn-sm" onclick="exportToCSV()">📊 Descargar Excel</button>
-                <button class="btn btn-outline btn-sm" style="color: var(--danger);" onclick="clearAllData()">🗑️ Vaciar Base de Datos</button>
+                <button class="btn btn-outline btn-sm" onclick="exportToCSV()">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Exportar CSV
+                </button>
+                <button class="btn btn-outline btn-sm" style="color: var(--danger);" onclick="clearAllData()">
+                    <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Vaciar Base de Datos
+                </button>
             </div>
         </div>
     </section>
@@ -254,13 +311,24 @@
     <!-- Visualización y Búsqueda (Tanto Usuario como Admin) -->
     <section class="card">
         <div class="tabs-header">
-            <button class="tab-btn active" id="tabBtnDetail" onclick="switchTab('detail')">📋 Consulta de Herramientas (<span id="tabCount">0</span>)</button>
-            <button class="tab-btn" id="tabBtnSummary" onclick="switchTab('summary')">📊 Resumen por Estado</button>
+            <button class="tab-btn active" id="tabBtnDetail" onclick="switchTab('detail')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                Consulta de Herramientas (<span id="tabCount">0</span>)
+            </button>
+            <button class="tab-btn" id="tabBtnSummary" onclick="switchTab('summary')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Resumen por Estado
+            </button>
         </div>
 
         <div id="tabDetail">
             <div class="filter-bar">
-                <input type="text" id="globalSearch" placeholder="🔍 Buscar código, herramienta, gaveta..." oninput="applyFilters()">
+                <div class="search-box">
+                    <span class="search-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" id="globalSearch" placeholder="Buscar código, herramienta, gaveta..." oninput="applyFilters()">
+                </div>
                 <select id="filterTool" onchange="applyFilters()"><option value="">Todas las Herramientas</option></select>
                 <select id="filterStatus" onchange="applyFilters()"><option value="">Todos los Estados</option></select>
                 <select id="filterLocation" onchange="applyFilters()"><option value="">Todas las Gavetas</option></select>
@@ -302,7 +370,10 @@
 <div class="modal-bg" id="batchGeneratorModal">
     <div class="modal" style="max-width: 620px;">
         <div class="modal-head">
-            <h3>🏷️ Generador Masivo de Códigos de Barras</h3>
+            <h3>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Generador de Códigos de Barras
+            </h3>
             <button class="btn btn-outline btn-sm" onclick="closeModal('batchGeneratorModal')">✕</button>
         </div>
         <div class="form-grid" style="margin-bottom: 12px;">
@@ -338,7 +409,10 @@
         <div style="border: 1px dashed var(--border-color); background: #f8fafc; padding: 15px; border-radius: 8px; max-height: 220px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;" id="batchPreviewBox"></div>
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
             <button class="btn btn-outline" onclick="closeModal('batchGeneratorModal')">Cerrar</button>
-            <button class="btn btn-primary" onclick="printBatchGeneratedLabels()">🖨️ Mandar a Imprimir Todas</button>
+            <button class="btn btn-primary" onclick="printBatchGeneratedLabels()">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Imprimir Etiquetas
+            </button>
         </div>
     </div>
 </div>
@@ -410,7 +484,7 @@
         console.warn("Error inicializando Firebase:", e);
     }
 
-    const ADMIN_PASS = "MPI-IPM-2026-6202"; // Contraseña de acceso para administrador
+    const ADMIN_PASS = "MPI-IPM-2026-6202"; // Contraseña de acceso para administrador[cite: 3, 4]
     let currentRole = null;
     let inventoryItems = [];
     let toolsList = ["Alicate", "Destornillador", "Gato Hidráulico", "Juego de Dados", "Llave Inglesa", "Martillo", "Pistola Neumática", "Taladro"];
@@ -479,11 +553,11 @@
 
         const roleBadge = document.getElementById('currentRoleBadge');
         if (role === 'admin') {
-            roleBadge.textContent = "Perfil: Administrador";
+            roleBadge.textContent = "Administrador";
             roleBadge.className = "badge badge-admin";
             document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
         } else {
-            roleBadge.textContent = "Perfil: Usuario (Solo Lectura)";
+            roleBadge.textContent = "Usuario (Consulta)";
             roleBadge.className = "badge badge-user";
             document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
         }
@@ -552,7 +626,7 @@
 
     function clearAllData() {
         if (currentRole !== 'admin') return;
-        if (confirm("⚠️ ¿Estás seguro de BORRAR TODO el inventario de la base de datos?")) {
+        if (confirm("¿Estás seguro de borrar todos los registros del inventario?")) {
             if (db) {
                 db.ref("taller/inventory").remove();
             } else {
@@ -657,7 +731,7 @@
         filteredItemsCache.forEach(item => {
             const row = body.insertRow();
             row.insertCell(0).textContent = item.timestamp;
-            row.insertCell(1).innerHTML = `<strong>${item.barcode}</strong>`;
+            row.insertCell(1).innerHTML = `<strong style="font-family: monospace;">${item.barcode}</strong>`;
             row.insertCell(2).textContent = item.toolName;
             row.insertCell(3).innerHTML = `<span class="badge ${getBadgeClass(item.status)}">${item.status}</span>`;
             row.insertCell(4).textContent = item.location || "-";
@@ -666,7 +740,7 @@
             if (currentRole === 'admin') {
                 const actCell = row.insertCell(6);
                 actCell.className = "text-center admin-only";
-                actCell.innerHTML = `<button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteItem('${item.barcode}')">🗑️ Borrar</button>`;
+                actCell.innerHTML = `<button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteItem('${item.barcode}')"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Borrar</button>`;
             }
         });
     }
@@ -770,7 +844,10 @@
 
     function toggleAdvancedFields() {
         const adv = document.getElementById('advancedFields');
-        adv.style.display = adv.style.display === 'grid' ? 'none' : 'grid';
+        const isShown = adv.style.display === 'grid';
+        adv.style.display = isShown ? 'none' : 'grid';
+        const icon = document.getElementById('advToggleIcon');
+        icon.innerHTML = isShown ? '<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>' : '<line x1="5" y1="12" x2="19" y2="12"></line>';
     }
 
     function switchTab(tab) {
@@ -808,7 +885,7 @@
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        document.getElementById('themeBtn').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+        document.getElementById('themeBtnText').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -821,7 +898,7 @@
         toolsList.forEach((t, idx) => {
             const item = document.createElement('div');
             item.className = 'mgmt-item';
-            item.innerHTML = `<span>${t}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteTool(${idx})">🗑️</button>`;
+            item.innerHTML = `<span>${t}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteTool(${idx})"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
             container.appendChild(item);
         });
     }
@@ -848,7 +925,7 @@
         statusesList.forEach((s, idx) => {
             const item = document.createElement('div');
             item.className = 'mgmt-item';
-            item.innerHTML = `<span>${s}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteStatus(${idx})">🗑️</button>`;
+            item.innerHTML = `<span>${s}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteStatus(${idx})"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
             container.appendChild(item);
         });
     }
@@ -876,7 +953,7 @@
         locationsList.forEach((l, idx) => {
             const item = document.createElement('div');
             item.className = 'mgmt-item';
-            item.innerHTML = `<span>${l}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteLocation(${idx})">🗑️</button>`;
+            item.innerHTML = `<span>${l}</span><button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteLocation(${idx})"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
             container.appendChild(item);
         });
     }
