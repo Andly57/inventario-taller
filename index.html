@@ -197,6 +197,11 @@
         #camera-reader { width: 100%; border-radius: 8px; overflow: hidden; background: #000; margin: auto; }
         #camera-reader video { width: 100% !important; height: auto !important; border-radius: 8px; }
 
+        /* Flash & Status Banner */
+        .camera-controls-bar { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .verify-banner { font-size: 0.78rem; padding: 6px 10px; border-radius: 6px; margin-top: 10px; display: none; }
+        .verify-banner.active { display: block; background: rgba(245,158,11,0.12); color: var(--warning); border: 1px dashed var(--warning); }
+
         /* Print Labels */
         .printable-label { background: #ffffff !important; color: #000000 !important; padding: 8px 14px; text-align: center; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; margin: 4px; border: 1px dashed #cbd5e1; border-radius: 6px; }
         .printable-label .lbl-header { font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; color: #000; }
@@ -675,8 +680,18 @@
             <button class="btn btn-outline btn-sm" onclick="stopCameraScanner()">✕</button>
         </div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0;">Apunta con tu cámara directamente al código de barras.</p>
+        
         <div id="camera-reader"></div>
-        <div style="margin-top: 15px; display: flex; justify-content: center;">
+
+        <div id="verifyIndicator" class="verify-banner">
+            ⚡ <b>Flash activo:</b> Verificando lectura (<span id="verifyCount">0</span>/3 lecturas coincidentes)...
+        </div>
+
+        <div class="camera-controls-bar">
+            <button id="torchToggleBtn" class="btn btn-outline btn-sm" onclick="toggleTorch()">
+                <svg class="icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                <span id="torchBtnText">Activar Linterna</span>
+            </button>
             <button class="btn btn-danger btn-sm" onclick="stopCameraScanner()">Cerrar Cámara</button>
         </div>
     </div>
@@ -807,9 +822,13 @@
 
     let filteredItemsCache = [];
 
-    // Instancia del lector de cámara
+    // Instancia del lector de cámara y control de linterna / verificación
     let html5QrCode = null;
     let targetInputId = null;
+    let isTorchOn = false;
+    let lastScannedCandidate = null;
+    let consecutiveMatchCount = 0;
+    const REQUIRED_VERIFICATIONS = 3;
 
     document.addEventListener("DOMContentLoaded", () => {
         loadAllSelects();
@@ -864,9 +883,14 @@
         }
     }
 
-    // 2. MÓDULO DE CÁMARA / ESCÁNER EN VIVO
+    // 2. MÓDULO DE CÁMARA / ESCÁNER EN VIVO CON FLASH Y VERIFICADOR
     function startCameraScanner(targetFieldId) {
         targetInputId = targetFieldId;
+        isTorchOn = false;
+        lastScannedCandidate = null;
+        consecutiveMatchCount = 0;
+        updateTorchUI();
+
         document.getElementById('cameraModal').style.display = 'flex';
 
         if (!html5QrCode) {
@@ -874,7 +898,7 @@
         }
 
         const config = {
-            fps: 15,
+            fps: 20,
             qrbox: { width: 280, height: 160 },
             aspectRatio: 1.0
         };
@@ -883,24 +907,92 @@
             { facingMode: "environment" },
             config,
             (decodedText) => {
-                // Éxito al decodificar
-                if (navigator.vibrate) navigator.vibrate(80);
-                
-                const targetInput = document.getElementById(targetInputId);
-                if (targetInput) {
-                    targetInput.value = decodedText.trim();
-                    targetInput.dispatchEvent(new Event('input'));
+                const cleanCode = decodedText.trim();
+
+                // Si la linterna está encendida, se ejecuta la verificación multi-lectura
+                if (isTorchOn) {
+                    if (cleanCode === lastScannedCandidate) {
+                        consecutiveMatchCount++;
+                    } else {
+                        lastScannedCandidate = cleanCode;
+                        consecutiveMatchCount = 1;
+                    }
+
+                    document.getElementById('verifyCount').textContent = consecutiveMatchCount;
+
+                    if (consecutiveMatchCount >= REQUIRED_VERIFICATIONS) {
+                        applyScannedCode(cleanCode);
+                    }
+                } else {
+                    // Modo normal sin linterna: asignación directa
+                    applyScannedCode(cleanCode);
                 }
-                stopCameraScanner();
             },
-            () => {} // Ignorar fallas por frame no detectado
+            () => {} // Ignorar fallas por cuadro no detectado
         ).catch(err => {
             alert("No se pudo acceder a la cámara. Asegúrate de dar permisos: " + err);
             stopCameraScanner();
         });
     }
 
+    function applyScannedCode(code) {
+        if (navigator.vibrate) navigator.vibrate(80);
+        
+        const targetInput = document.getElementById(targetInputId);
+        if (targetInput) {
+            targetInput.value = code;
+            targetInput.dispatchEvent(new Event('input'));
+        }
+        stopCameraScanner();
+    }
+
+    async function toggleTorch() {
+        if (!html5QrCode || !html5QrCode.isScanning) return;
+
+        try {
+            // Se invierte el estado
+            const newState = !isTorchOn;
+            await html5QrCode.applyVideoConstraints({
+                advanced: [{ torch: newState }]
+            });
+            isTorchOn = newState;
+            lastScannedCandidate = null;
+            consecutiveMatchCount = 0;
+            updateTorchUI();
+        } catch (err) {
+            alert("Tu dispositivo o navegador no permite controlar la linterna directamente: " + err);
+        }
+    }
+
+    function updateTorchUI() {
+        const btnText = document.getElementById('torchBtnText');
+        const btn = document.getElementById('torchToggleBtn');
+        const verifyBox = document.getElementById('verifyIndicator');
+        const countSpan = document.getElementById('verifyCount');
+
+        if (isTorchOn) {
+            btnText.textContent = "Apagar Linterna";
+            btn.classList.remove('btn-outline');
+            btn.classList.add('btn-warning');
+            verifyBox.classList.add('active');
+            countSpan.textContent = "0";
+        } else {
+            btnText.textContent = "Activar Linterna";
+            btn.classList.remove('btn-warning');
+            btn.classList.add('btn-outline');
+            verifyBox.classList.remove('active');
+        }
+    }
+
     function stopCameraScanner() {
+        if (isTorchOn && html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.applyVideoConstraints({ advanced: [{ torch: false }] }).catch(() => {});
+        }
+        isTorchOn = false;
+        lastScannedCandidate = null;
+        consecutiveMatchCount = 0;
+        updateTorchUI();
+
         if (html5QrCode && html5QrCode.isScanning) {
             html5QrCode.stop().then(() => {
                 document.getElementById('cameraModal').style.display = 'none';
@@ -1606,7 +1698,7 @@
         loadAllSelects();
     }
     function deleteLocation(idx) {
-        locationsList.splice(idx, 1);
+        toolsList.splice(idx, 1);
         if (db) db.ref("taller/locations").set(locationsList);
         renderLocationList();
         loadAllSelects();
