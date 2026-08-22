@@ -106,12 +106,12 @@
         .kpi-val.mantenimiento { color: var(--warning); }
         .kpi-val.faltante { color: var(--purple); }
 
-        /* Scanner Hero Section */
+        /* Scanner Hero Section - ESPACIADO CORREGIDO PARA EVITAR SUPERPOSICIÓN */
         .scanner-hero { border: 2px solid var(--primary); background: var(--bg-card); position: relative; }
-        .scanner-input-box { position: relative; margin-bottom: 15px; }
-        .barcode-huge { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; padding: 12px 14px 12px 42px; border-radius: 8px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-main); width: 100%; font-family: monospace; }
+        .scanner-input-box { position: relative; width: 100%; display: flex; align-items: center; margin-bottom: 15px; }
+        .barcode-huge { font-size: 1.05rem; font-weight: 600; letter-spacing: 1px; padding: 12px 14px 12px 48px !important; border-radius: 8px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-main); width: 100%; font-family: monospace; height: 48px; box-sizing: border-box; }
         .barcode-huge:focus { border-color: var(--primary); outline: none; background-color: var(--bg-card); box-shadow: 0 0 0 4px rgba(37,99,235,0.12); }
-        .scanner-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; }
+        .scanner-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
 
         /* Field Grid */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
@@ -244,7 +244,7 @@
             </div>
         </div>
         <div class="nav-actions">
-            <!-- Botones Exclusivos de Administrador -->
+            <!-- Botones Exclusivos de Administrador (Con iconos vectoriales) -->
             <button class="btn btn-primary btn-sm admin-only" onclick="openLoanModal()">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 Registrar Préstamo
@@ -334,7 +334,7 @@
                 <div class="input-with-btn">
                     <select id="status"></select>
                     <button type="button" class="btn btn-outline btn-sm" onclick="openStatusManagerModal()" title="Configurar lista">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                 </div>
             </div>
@@ -344,7 +344,7 @@
                 <div class="input-with-btn">
                     <select id="location"></select>
                     <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()" title="Configurar lista">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                 </div>
             </div>
@@ -550,7 +550,10 @@
 
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
             <button class="btn btn-outline" onclick="closeModal('loanModal')">Cancelar</button>
-            <button class="btn btn-primary" onclick="confirmLoan()">💾 Guardar Registro de Préstamo</button>
+            <button class="btn btn-primary" onclick="confirmLoan()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Guardar Registro de Préstamo
+            </button>
         </div>
     </div>
 </div>
@@ -627,7 +630,10 @@
 
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
             <button class="btn btn-outline" onclick="closeModal('returnModal')">Cancelar</button>
-            <button class="btn btn-success" onclick="confirmReturn()">✓ Confirmar Devolución</button>
+            <button class="btn btn-success" onclick="confirmReturn()">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Confirmar Devolución
+            </button>
         </div>
     </div>
 </div>
@@ -884,7 +890,6 @@
         const notes = document.getElementById('notes').value.trim() || "-";
         const timestamp = getNowString();
 
-        // Buscar si ya existe para conservar su estado de préstamo si lo tenía
         const existing = inventoryItems.find(i => i.barcode === barcode);
         const isLoaned = existing ? (existing.isLoaned || false) : false;
         const currentBorrower = existing ? (existing.currentBorrower || "") : "";
@@ -892,7 +897,7 @@
         const newItem = { timestamp, barcode, toolName, status, location, notes, isLoaned, currentBorrower };
 
         if (db) {
-            db.ref("taller/inventory/" + barcode.replace(/[.#$\[\]]/g, "_")).set(newItem);
+            db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).set(newItem);
         } else {
             const idx = inventoryItems.findIndex(i => i.barcode === barcode);
             if (idx >= 0) inventoryItems[idx] = newItem;
@@ -910,7 +915,7 @@
         if (currentRole !== 'admin') return;
         if (confirm(`¿Eliminar el registro con código ${barcode}?`)) {
             if (db) {
-                db.ref("taller/inventory/" + barcode.replace(/[.#$\[\]]/g, "_")).remove();
+                db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).remove();
             } else {
                 inventoryItems = inventoryItems.filter(i => i.barcode !== barcode);
                 localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
@@ -1013,13 +1018,12 @@
             postCheck: null
         };
 
-        // Actualizar herramienta en inventario
         item.isLoaned = true;
         item.currentBorrower = borrower;
 
         if (db) {
             db.ref("taller/loans/" + loanId).set(loanRecord);
-            db.ref("taller/inventory/" + code.replace(/[.#$\[\]]/g, "_")).set(item);
+            db.ref("taller/inventory/" + code.replace(/[.#$\\[\\]]/g, "_")).set(item);
         } else {
             loansList.unshift(loanRecord);
             localStorage.setItem('taller_loans', JSON.stringify(loansList));
@@ -1080,7 +1084,6 @@
             notes: postNotes
         };
 
-        // Actualizar herramienta en inventario
         const item = inventoryItems.find(i => i.barcode === code);
         if (item) {
             item.isLoaned = false;
@@ -1092,7 +1095,7 @@
 
         if (db) {
             db.ref("taller/loans/" + activeLoan.id).set(activeLoan);
-            if (item) db.ref("taller/inventory/" + code.replace(/[.#$\[\]]/g, "_")).set(item);
+            if (item) db.ref("taller/inventory/" + code.replace(/[.#$\\[\\]]/g, "_")).set(item);
         } else {
             localStorage.setItem('taller_loans', JSON.stringify(loansList));
             localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
@@ -1117,7 +1120,7 @@
         const operativas = inventoryItems.filter(i => !i.isLoaned && (i.status === 'Excelente' || i.status === 'Moderado' || i.status === 'Operativo')).length;
         const averiadas = inventoryItems.filter(i => i.status === 'Mal estado' || i.status === 'Averiado').length;
         const mantenimiento = inventoryItems.filter(i => i.status === 'En Mantenimiento').length;
-        const faltantes = prestadas; // Herramientas que están fuera del taller actualmente
+        const faltantes = prestadas;
 
         document.getElementById('kpiTotal').textContent = total;
         document.getElementById('kpiOperativas').textContent = operativas;
@@ -1189,13 +1192,11 @@
             row.insertCell(2).textContent = l.toolName;
             row.insertCell(3).innerHTML = `<strong>${l.borrower}</strong>`;
             
-            // Inspección previa
             const pre = l.preCheck || {};
             row.insertCell(4).innerHTML = `<span style="font-size:0.75rem;">Est: <b>${pre.state||'-'}</b> | Cable: <b>${pre.cable||'-'}</b> | Mandril: <b>${pre.mandril||'-'}</b> | Int: <b>${pre.switchState||'-'}</b><br>Obs: <i>${pre.notes||'-'}</i></span>`;
 
             row.insertCell(5).textContent = l.returnDate || "-";
 
-            // Inspección posterior
             if (l.postCheck) {
                 const post = l.postCheck;
                 row.insertCell(6).innerHTML = `<span style="font-size:0.75rem;">Est: <b>${post.state||'-'}</b> | Cable: <b>${post.cable||'-'}</b> | Mandril: <b>${post.mandril||'-'}</b> | Int: <b>${post.switchState||'-'}</b><br>Obs: <i>${post.notes||'-'}</i></span>`;
@@ -1236,12 +1237,11 @@
             return matchSearch && matchTool && matchStatus && matchLoc;
         });
 
-        // Ordenamiento
         filteredItemsCache.sort((a, b) => {
             if (sortOrder === 'name_asc') return a.toolName.localeCompare(b.toolName);
             if (sortOrder === 'name_desc') return b.toolName.localeCompare(a.toolName);
             if (sortOrder === 'time_asc') return a.timestamp.localeCompare(b.timestamp);
-            return b.timestamp.localeCompare(a.timestamp); // time_desc por defecto
+            return b.timestamp.localeCompare(a.timestamp);
         });
 
         renderDetailTable();
@@ -1264,7 +1264,6 @@
             row.insertCell(2).textContent = item.toolName;
             row.insertCell(3).innerHTML = `<span class="badge ${getBadgeClass(item.status)}">${item.status}</span>`;
             
-            // Disponibilidad / Préstamo
             const dispCell = row.insertCell(4);
             if (item.isLoaned) {
                 dispCell.innerHTML = `<span class="badge badge-loan">Prestada a: ${item.currentBorrower || 'Técnico'}</span>`;
