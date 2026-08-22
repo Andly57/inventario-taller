@@ -16,8 +16,8 @@
             --bg-card: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --input-bg: #f8fafc;
+            --border-color: #cbd5e1;
+            --input-bg: #ffffff;
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
             --success: #10b981;
@@ -106,9 +106,19 @@
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
         
-        input, select { width: 100%; padding: 8px 10px; background-color: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.88rem; }
-        input:focus, select:focus { border-color: var(--primary); outline: none; background-color: var(--bg-card); }
-        .input-with-btn { display: flex; gap: 5px; }
+        select, input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            height: 40px;
+            padding: 6px 12px;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        select:focus, input:focus { border-color: var(--primary); outline: none; background-color: var(--bg-card); }
+        .input-with-btn { display: flex; gap: 6px; align-items: center; }
 
         .advanced-fields { display: none; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border-color); }
         .toggle-adv { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 0; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; width: fit-content; }
@@ -121,7 +131,7 @@
         .btn-outline { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); }
         .btn-outline:hover { background: var(--border-color); }
         .btn-danger { background: var(--danger); color: white; }
-        .btn-sm { padding: 5px 9px; font-size: 0.78rem; border-radius: 5px; }
+        .btn-sm { padding: 7px 10px; height: 40px; font-size: 0.78rem; border-radius: 6px; flex-shrink: 0; }
 
         /* Tabs & Table */
         .tabs-header { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 14px; }
@@ -130,7 +140,7 @@
 
         .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 12px; }
         .search-box { position: relative; }
-        .search-box input { padding-left: 32px; }
+        .search-box input { padding-left: 32px; cursor: text; }
         .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; }
 
         .table-wrap { overflow-x: auto; max-height: 420px; border: 1px solid var(--border-color); border-radius: 8px; }
@@ -262,7 +272,7 @@
                 <div class="input-with-btn">
                     <select id="status"></select>
                     <button type="button" class="btn btn-outline btn-sm" onclick="openStatusManagerModal()" title="Configurar lista">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                 </div>
             </div>
@@ -272,7 +282,7 @@
                 <div class="input-with-btn">
                     <select id="location"></select>
                     <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()" title="Configurar lista">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                 </div>
             </div>
@@ -484,7 +494,7 @@
         console.warn("Error inicializando Firebase:", e);
     }
 
-    const ADMIN_PASS = "MPI-IPM-2026-6202"; // Contraseña de acceso para administrador[cite: 3, 4]
+    const ADMIN_PASS = "MPI-IPM-2026-6202";
     let currentRole = null;
     let inventoryItems = [];
     let toolsList = ["Alicate", "Destornillador", "Gato Hidráulico", "Juego de Dados", "Llave Inglesa", "Martillo", "Pistola Neumática", "Taladro"];
@@ -496,7 +506,7 @@
     let filteredItemsCache = [];
 
     document.addEventListener("DOMContentLoaded", () => {
-        initTheme();
+        loadAllSelects();
         initDataListeners();
     });
 
@@ -510,17 +520,29 @@
             });
             db.ref("taller/tools").on("value", (snap) => {
                 const val = snap.val();
-                if (val) toolsList = val;
+                if (val) {
+                    toolsList = Array.isArray(val) ? val : Object.values(val);
+                } else {
+                    db.ref("taller/tools").set(toolsList);
+                }
                 loadAllSelects();
             });
             db.ref("taller/statuses").on("value", (snap) => {
                 const val = snap.val();
-                if (val) statusesList = val;
+                if (val) {
+                    statusesList = Array.isArray(val) ? val : Object.values(val);
+                } else {
+                    db.ref("taller/statuses").set(statusesList);
+                }
                 loadAllSelects();
             });
             db.ref("taller/locations").on("value", (snap) => {
                 const val = snap.val();
-                if (val) locationsList = val;
+                if (val) {
+                    locationsList = Array.isArray(val) ? val : Object.values(val);
+                } else {
+                    db.ref("taller/locations").set(locationsList);
+                }
                 loadAllSelects();
             });
         } else {
@@ -562,6 +584,7 @@
             document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
         }
 
+        loadAllSelects();
         render();
         if (role === 'admin') {
             document.getElementById('barcode').focus();
@@ -809,12 +832,28 @@
         setTimeout(() => window.print(), 150);
     }
 
-    // UTILIDADES GENERALES
-    function populateSelect(id, array) {
+    // UTILIDADES GENERALES (INYECCIÓN DIRECTA DE OPCIONES)
+    function populateSelect(id, array, defaultOption = null) {
         const el = document.getElementById(id);
         if (!el) return;
-        el.innerHTML = '';
-        array.forEach(item => el.add(new Option(item, item)));
+        
+        let html = '';
+        if (defaultOption !== null) {
+            html += `<option value="">${defaultOption}</option>`;
+        }
+        
+        if (Array.isArray(array)) {
+            array.forEach(item => {
+                if (item) {
+                    html += `<option value="${item}">${item}</option>`;
+                }
+            });
+        }
+        
+        el.innerHTML = html;
+        if (defaultOption === null && array && array.length > 0) {
+            el.value = array[0];
+        }
     }
 
     function loadAllSelects() {
@@ -822,17 +861,9 @@
         populateSelect('status', statusesList);
         populateSelect('location', locationsList);
 
-        populateSelect('filterTool', toolsList);
-        document.getElementById('filterTool').add(new Option("Todas las Herramientas", ""), 0);
-        document.getElementById('filterTool').value = "";
-
-        populateSelect('filterStatus', statusesList);
-        document.getElementById('filterStatus').add(new Option("Todos los Estados", ""), 0);
-        document.getElementById('filterStatus').value = "";
-
-        populateSelect('filterLocation', locationsList);
-        document.getElementById('filterLocation').add(new Option("Todas las Gavetas", ""), 0);
-        document.getElementById('filterLocation').value = "";
+        populateSelect('filterTool', toolsList, "Todas las Herramientas");
+        populateSelect('filterStatus', statusesList, "Todos los Estados");
+        populateSelect('filterLocation', locationsList, "Todas las Gavetas");
     }
 
     function getBadgeClass(st) {
