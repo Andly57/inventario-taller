@@ -23,6 +23,7 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
+            --purple: #8b5cf6;
             --badge-exc-bg: #ecfdf5;
             --badge-exc-color: #047857;
             --badge-mod-bg: #fffbeb;
@@ -31,6 +32,8 @@
             --badge-bad-color: #b91c1c;
             --badge-gen-bg: #f1f5f9;
             --badge-gen-color: #475569;
+            --badge-loan-bg: #eff6ff;
+            --badge-loan-color: #1d4ed8;
             --th-bg: #f1f5f9;
         }
 
@@ -46,6 +49,7 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #f87171;
+            --purple: #a78bfa;
             --badge-exc-bg: #064e3b;
             --badge-exc-color: #a7f3d0;
             --badge-mod-bg: #78350f;
@@ -54,12 +58,14 @@
             --badge-bad-color: #fecaca;
             --badge-gen-bg: #1e293b;
             --badge-gen-color: #cbd5e1;
+            --badge-loan-bg: #1e3a8a;
+            --badge-loan-color: #bfdbfe;
             --th-bg: #0f172a;
         }
 
         * { box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.5; }
-        .container { max-width: 1100px; margin: auto; display: flex; flex-direction: column; gap: 16px; }
+        .container { max-width: 1140px; margin: auto; display: flex; flex-direction: column; gap: 16px; }
         .hidden { display: none !important; }
 
         /* SVG Icons */
@@ -75,24 +81,30 @@
         .login-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
 
         /* Top Header */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand-icon-wrap { width: 40px; height: 40px; background: rgba(37,99,235,0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
         .brand h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
         .brand p { margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-        .nav-actions { display: flex; gap: 8px; align-items: center; }
+        .nav-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
         /* General Card */
         .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .card-title { font-size: 0.95rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
 
-        /* KPI / Stat Bar */
-        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-        .stat-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; text-align: left; }
-        .stat-lbl { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-num { font-size: 1.4rem; font-weight: 800; margin-top: 4px; color: var(--text-main); }
-        .stat-num.primary { color: var(--primary); }
+        /* Dashboard Questions / KPIs Grid */
+        .kpi-section { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; }
+        .kpi-title { font-size: 0.86rem; font-weight: 700; margin: 0 0 12px 0; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+        .kpi-card { background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; position: relative; }
+        .kpi-q { font-size: 0.76rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; line-height: 1.3; }
+        .kpi-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); }
+        .kpi-val.operativa { color: var(--success); }
+        .kpi-val.prestada { color: var(--primary); }
+        .kpi-val.averiada { color: var(--danger); }
+        .kpi-val.mantenimiento { color: var(--warning); }
+        .kpi-val.faltante { color: var(--purple); }
 
         /* Scanner Hero Section */
         .scanner-hero { border: 2px solid var(--primary); background: var(--bg-card); position: relative; }
@@ -128,22 +140,24 @@
         .btn { padding: 8px 14px; border-radius: 6px; font-size: 0.84rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: 0.15s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-hover); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
         .btn-outline { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); }
         .btn-outline:hover { background: var(--border-color); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 7px 10px; height: 40px; font-size: 0.78rem; border-radius: 6px; flex-shrink: 0; }
 
         /* Tabs & Table */
-        .tabs-header { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 14px; }
-        .tab-btn { background: none; border: none; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
+        .tabs-header { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 14px; overflow-x: auto; }
+        .tab-btn { background: none; border: none; padding: 8px 14px; font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 12px; }
+        .filter-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 12px; }
         .search-box { position: relative; }
         .search-box input { padding-left: 32px; cursor: text; }
         .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); display: flex; }
 
-        .table-wrap { overflow-x: auto; max-height: 420px; border: 1px solid var(--border-color); border-radius: 8px; }
+        .table-wrap { overflow-x: auto; max-height: 440px; border: 1px solid var(--border-color); border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left; }
         th, td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
         th { background: var(--th-bg); font-weight: 600; position: sticky; top: 0; z-index: 2; cursor: pointer; }
@@ -154,12 +168,19 @@
         .badge-mod { background: var(--badge-mod-bg); color: var(--badge-mod-color); }
         .badge-bad { background: var(--badge-bad-bg); color: var(--badge-bad-color); }
         .badge-gen { background: var(--badge-gen-bg); color: var(--badge-gen-color); }
+        .badge-loan { background: var(--badge-loan-bg); color: var(--badge-loan-color); }
         .badge-user { background: #d4edda; color: #155724; }
         .badge-admin { background: #ffeeba; color: #856404; }
 
+        /* Checklist / Inspection Card in Modals */
+        .inspection-box { background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-top: 10px; }
+        .inspection-title { font-size: 0.82rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .inspection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+        .preview-tool-banner { background: rgba(37,99,235,0.06); border: 1px dashed var(--primary); border-radius: 8px; padding: 12px 16px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+
         /* Modals */
         .modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal { background: var(--bg-card); width: 92%; max-width: 580px; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 88vh; overflow-y: auto; }
+        .modal { background: var(--bg-card); width: 94%; max-width: 650px; border-radius: 10px; padding: 22px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; }
         .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
         .modal-head h3 { margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
         .mgmt-list { max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px; }
@@ -189,7 +210,7 @@
             <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
         </div>
         <h2>Sistema de Taller</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Control de inventario y gestión de herramientas</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Control de inventario, herramientas y préstamos</p>
         
         <div class="login-btn-group">
             <button class="btn btn-primary" onclick="loginAs('user')">
@@ -219,11 +240,20 @@
             </div>
             <div>
                 <h1>Taller Mecánico</h1>
-                <p>Control de Herramientas <span id="currentRoleBadge" class="badge"></span></p>
+                <p>Control y Monitoreo <span id="currentRoleBadge" class="badge"></span></p>
             </div>
         </div>
         <div class="nav-actions">
-            <button class="btn btn-primary btn-sm admin-only" onclick="openBatchGeneratorModal()">
+            <!-- Botones Exclusivos de Administrador -->
+            <button class="btn btn-primary btn-sm admin-only" onclick="openLoanModal()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                Registrar Préstamo
+            </button>
+            <button class="btn btn-success btn-sm admin-only" onclick="openReturnModal()">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Devolver Herramienta
+            </button>
+            <button class="btn btn-outline btn-sm admin-only" onclick="openBatchGeneratorModal()">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                 Generar Códigos
             </button>
@@ -238,14 +268,46 @@
         </div>
     </header>
 
-    <section class="stats-bar" id="statsBar"></section>
+    <!-- PANEL DE CONTROL / PREGUNTAS Y MÉTRICAS DEL TALLER -->
+    <section class="kpi-section">
+        <div class="kpi-title">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            Estado General del Taller
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-q">¿Cuántas herramientas existen?</div>
+                <div class="kpi-val" id="kpiTotal">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-q">¿Cuántas están operativas?</div>
+                <div class="kpi-val operativa" id="kpiOperativas">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-q">¿Cuántas están prestadas?</div>
+                <div class="kpi-val prestada" id="kpiPrestadas">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-q">¿Cuántas están averiadas?</div>
+                <div class="kpi-val averiada" id="kpiAveriadas">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-q">¿Cuántas en mantenimiento?</div>
+                <div class="kpi-val mantenimiento" id="kpiMantenimiento">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-q">¿Cuántas herramientas faltan?</div>
+                <div class="kpi-val faltante" id="kpiFaltantes">0</div>
+            </div>
+        </div>
+    </section>
 
     <!-- Módulo de Entrada Rápida de Inventario (Solo Admin) -->
     <section class="card scanner-hero admin-only" id="scannerSection">
         <div class="card-header">
             <h2 class="card-title">
                 <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                <span>Registro de Activo / Escaneo</span>
+                <span>Registro y Alta de Herramientas</span>
             </h2>
         </div>
 
@@ -253,7 +315,7 @@
             <span class="scanner-icon">
                 <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><line x1="7" y1="12" x2="17" y2="12"></line></svg>
             </span>
-            <input type="text" id="barcode" class="barcode-huge" placeholder="Escanea la etiqueta con el lector..." autofocus autocomplete="off">
+            <input type="text" id="barcode" class="barcode-huge" placeholder="Escanea la etiqueta con el lector o digita el código..." autofocus autocomplete="off">
         </div>
 
         <div class="form-grid">
@@ -278,7 +340,7 @@
             </div>
 
             <div class="form-group">
-                <label for="location">Ubicación / Gaveta:</label>
+                <label for="location">¿Dónde está? (Ubicación / Gaveta):</label>
                 <div class="input-with-btn">
                     <select id="location"></select>
                     <button type="button" class="btn btn-outline btn-sm" onclick="openLocationManagerModal()" title="Configurar lista">
@@ -303,7 +365,7 @@
         <div class="actions-row">
             <button class="btn btn-primary" onclick="saveData()">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                Guardar Registro
+                Guardar Herramienta
             </button>
             <div style="display: flex; gap: 6px;">
                 <button class="btn btn-outline btn-sm" onclick="exportToCSV()">
@@ -318,12 +380,16 @@
         </div>
     </section>
 
-    <!-- Visualización y Búsqueda (Tanto Usuario como Admin) -->
+    <!-- Visualización, Búsqueda y Préstamos -->
     <section class="card">
         <div class="tabs-header">
             <button class="tab-btn active" id="tabBtnDetail" onclick="switchTab('detail')">
                 <svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                 Consulta de Herramientas (<span id="tabCount">0</span>)
+            </button>
+            <button class="tab-btn" id="tabBtnLoans" onclick="switchTab('loans')">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Registro de Préstamos Activos e Historial
             </button>
             <button class="tab-btn" id="tabBtnSummary" onclick="switchTab('summary')">
                 <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
@@ -331,6 +397,7 @@
             </button>
         </div>
 
+        <!-- TAB 1: CONSULTA DE HERRAMIENTAS -->
         <div id="tabDetail">
             <div class="filter-bar">
                 <div class="search-box">
@@ -342,6 +409,13 @@
                 <select id="filterTool" onchange="applyFilters()"><option value="">Todas las Herramientas</option></select>
                 <select id="filterStatus" onchange="applyFilters()"><option value="">Todos los Estados</option></select>
                 <select id="filterLocation" onchange="applyFilters()"><option value="">Todas las Gavetas</option></select>
+                <!-- FILTRO ALFABÉTICO / ORDENAMIENTO -->
+                <select id="filterSortOrder" onchange="applyFilters()">
+                    <option value="name_asc">Orden: A ➔ Z (Alfabético)</option>
+                    <option value="name_desc">Orden: Z ➔ A (Alfabético)</option>
+                    <option value="time_desc">Más recientes primero</option>
+                    <option value="time_asc">Más antiguos primero</option>
+                </select>
                 <button class="btn btn-outline btn-sm" onclick="resetFilters()">Limpiar</button>
             </div>
 
@@ -349,11 +423,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th onclick="sortTable('timestamp')">Fecha/Hora</th>
-                            <th onclick="sortTable('barcode')">Código</th>
-                            <th onclick="sortTable('toolName')">Herramienta</th>
-                            <th onclick="sortTable('status')">Estado</th>
-                            <th onclick="sortTable('location')">Ubicación</th>
+                            <th>Fecha/Hora</th>
+                            <th>Código</th>
+                            <th>Herramienta</th>
+                            <th>Estado Actual</th>
+                            <th>Disponibilidad</th>
+                            <th>¿Dónde está?</th>
                             <th>Notas</th>
                             <th class="text-center admin-only" style="width: 110px;">Acciones</th>
                         </tr>
@@ -363,6 +438,28 @@
             </div>
         </div>
 
+        <!-- TAB 2: AUDITORÍA DE PRÉSTAMOS -->
+        <div id="tabLoans" style="display: none;">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha Préstamo</th>
+                            <th>Código</th>
+                            <th>Herramienta</th>
+                            <th>Solicitante / Responsable</th>
+                            <th>Inspección Previa</th>
+                            <th>Fecha Devolución</th>
+                            <th>Inspección Retorno</th>
+                            <th class="text-center">Estado Préstamo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loansBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 3: RESUMEN GENERAL -->
         <div id="tabSummary" style="display: none;">
             <div class="table-wrap">
                 <table id="summaryTable">
@@ -375,6 +472,165 @@
 </div>
 
 <div id="printContainer"></div>
+
+<!-- MODAL: REGISTRAR PRÉSTAMO DE HERRAMIENTA -->
+<div class="modal-bg" id="loanModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                Registrar Préstamo de Herramienta
+            </h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal('loanModal')">✕</button>
+        </div>
+
+        <div class="form-group">
+            <label for="loanBarcode">Código de Barras de la Herramienta:</label>
+            <input type="text" id="loanBarcode" class="barcode-huge" placeholder="Escanea o digita el código..." oninput="onLoanBarcodeScan()" autocomplete="off">
+        </div>
+
+        <div id="loanPreviewBanner" class="preview-tool-banner hidden">
+            <div>
+                <strong id="loanPreviewToolName">-</strong>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Ubicación: <span id="loanPreviewLoc">-</span> | Estado: <span id="loanPreviewStat">-</span></div>
+            </div>
+            <span class="badge badge-exc" id="loanAvailBadge">Disponible</span>
+        </div>
+
+        <div class="form-group" style="margin-top: 10px;">
+            <label for="loanBorrower">Nombre del Técnico / Responsable que solicita:</label>
+            <input type="text" id="loanBorrower" placeholder="Ej: Juan Pérez / Mecánica General">
+        </div>
+
+        <!-- INSPECCIÓN TÉCNICA ANTES DEL PRÉSTAMO -->
+        <div class="inspection-box">
+            <div class="inspection-title">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Inspección Técnica: Antes del préstamo
+            </div>
+            <div class="inspection-grid">
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <select id="preState">
+                        <option value="Operativo">Operativo</option>
+                        <option value="Regular">Regular</option>
+                        <option value="Con detalles">Con detalles</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cable:</label>
+                    <select id="preCable">
+                        <option value="Íntegro">Íntegro</option>
+                        <option value="Dañado">Dañado / Con cinta</option>
+                        <option value="No aplica">No aplica</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mandril:</label>
+                    <select id="preMandril">
+                        <option value="Correcto">Correcto</option>
+                        <option value="Desgastado">Desgastado</option>
+                        <option value="No aplica">No aplica</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Interruptor:</label>
+                    <select id="preSwitch">
+                        <option value="Correcto">Correcto</option>
+                        <option value="Duro / Con juego">Duro / Con juego</option>
+                        <option value="No aplica">No aplica</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>Observaciones:</label>
+                <input type="text" id="preNotes" value="Ninguna" placeholder="Observaciones previas...">
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+            <button class="btn btn-outline" onclick="closeModal('loanModal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="confirmLoan()">💾 Guardar Registro de Préstamo</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: DEVOLVER HERRAMIENTA -->
+<div class="modal-bg" id="returnModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Recepción y Devolución de Herramienta
+            </h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal('returnModal')">✕</button>
+        </div>
+
+        <div class="form-group">
+            <label for="returnBarcode">Escanear Código de Herramienta Prestada:</label>
+            <input type="text" id="returnBarcode" class="barcode-huge" placeholder="Escanea la herramienta que retorna..." oninput="onReturnBarcodeScan()" autocomplete="off">
+        </div>
+
+        <div id="returnPreviewBanner" class="preview-tool-banner hidden">
+            <div>
+                <strong id="returnPreviewToolName">-</strong>
+                <div style="font-size: 0.78rem; color: var(--text-muted);">Prestado a: <strong id="returnBorrowerName">-</strong> | Fecha: <span id="returnLoanDate">-</span></div>
+            </div>
+            <span class="badge badge-loan">En Préstamo</span>
+        </div>
+
+        <!-- INSPECCIÓN TÉCNICA DESPUÉS DE LA DEVOLUCIÓN -->
+        <div class="inspection-box">
+            <div class="inspection-title">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                Inspección Técnica: Después de la devolución
+            </div>
+            <div class="inspection-grid">
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <select id="postState">
+                        <option value="Operativo">Operativo</option>
+                        <option value="Averiado / Dañado">Averiado / Dañado</option>
+                        <option value="En Mantenimiento">Requiere Mantenimiento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cable:</label>
+                    <select id="postCable">
+                        <option value="Íntegro">Íntegro</option>
+                        <option value="Dañado / Pelado">Dañado / Pelado</option>
+                        <option value="No aplica">No aplica</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mandril:</label>
+                    <select id="postMandril">
+                        <option value="Correcto">Correcto</option>
+                        <option value="Averiado">Averiado / Atascado</option>
+                        <option value="No aplica">No aplica</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Interruptor:</label>
+                    <select id="postSwitch">
+                        <option value="Correcto">Correcto</option>
+                        <option value="Fallando">Fallando / Descompuesto</option>
+                        <option value="No aplica">No aplica</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>Observaciones de Devolución:</label>
+                <input type="text" id="postNotes" value="Ninguna" placeholder="Observaciones de entrega...">
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+            <button class="btn btn-outline" onclick="closeModal('returnModal')">Cancelar</button>
+            <button class="btn btn-success" onclick="confirmReturn()">✓ Confirmar Devolución</button>
+        </div>
+    </div>
+</div>
 
 <!-- MODAL: GENERADOR MASIVO DE CÓDIGOS -->
 <div class="modal-bg" id="batchGeneratorModal">
@@ -495,15 +751,14 @@
     }
 
     const ADMIN_PASS = "MPI-IPM-2026-6202";
-    const DELETE_PASS = "borrocaset"; // Contraseña de seguridad para vaciar la base de datos
+    const DELETE_PASS = "borrocaset";
     let currentRole = null;
     let inventoryItems = [];
+    let loansList = [];
     let toolsList = ["Alicate", "Destornillador", "Gato Hidráulico", "Juego de Dados", "Llave Inglesa", "Martillo", "Pistola Neumática", "Taladro"];
     let statusesList = ["Excelente", "Moderado", "Mal estado", "En Mantenimiento"];
     let locationsList = ["Caja 1", "Caja 2", "Estante A", "Estante B", "Gaveta Móvil", "Mesa Principal"];
 
-    let sortColumn = 'timestamp';
-    let sortDirection = 'desc';
     let filteredItemsCache = [];
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -517,6 +772,11 @@
             db.ref("taller/inventory").on("value", (snap) => {
                 const val = snap.val();
                 inventoryItems = val ? Object.values(val) : [];
+                render();
+            });
+            db.ref("taller/loans").on("value", (snap) => {
+                const val = snap.val();
+                loansList = val ? Object.values(val) : [];
                 render();
             });
             db.ref("taller/tools").on("value", (snap) => {
@@ -548,6 +808,7 @@
             });
         } else {
             inventoryItems = JSON.parse(localStorage.getItem('taller_inventory')) || [];
+            loansList = JSON.parse(localStorage.getItem('taller_loans')) || [];
             render();
             loadAllSelects();
         }
@@ -600,7 +861,12 @@
         document.getElementById('loginScreen').classList.remove('hidden');
     }
 
-    // 3. REGISTRO Y GESTIÓN EN FIREBASE
+    // 3. REGISTRO DE INVENTARIO
+    function getNowString() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
     function saveData() {
         if (currentRole !== 'admin') return;
         const barcodeInput = document.getElementById('barcode');
@@ -616,16 +882,21 @@
         const status = document.getElementById('status').value;
         const location = document.getElementById('location').value;
         const notes = document.getElementById('notes').value.trim() || "-";
+        const timestamp = getNowString();
 
-        const now = new Date();
-        const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        // Buscar si ya existe para conservar su estado de préstamo si lo tenía
+        const existing = inventoryItems.find(i => i.barcode === barcode);
+        const isLoaned = existing ? (existing.isLoaned || false) : false;
+        const currentBorrower = existing ? (existing.currentBorrower || "") : "";
 
-        const newItem = { timestamp, barcode, toolName, status, location, notes };
+        const newItem = { timestamp, barcode, toolName, status, location, notes, isLoaned, currentBorrower };
 
         if (db) {
-            db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).set(newItem);
+            db.ref("taller/inventory/" + barcode.replace(/[.#$\[\]]/g, "_")).set(newItem);
         } else {
-            inventoryItems.unshift(newItem);
+            const idx = inventoryItems.findIndex(i => i.barcode === barcode);
+            if (idx >= 0) inventoryItems[idx] = newItem;
+            else inventoryItems.unshift(newItem);
             localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
             render();
         }
@@ -639,7 +910,7 @@
         if (currentRole !== 'admin') return;
         if (confirm(`¿Eliminar el registro con código ${barcode}?`)) {
             if (db) {
-                db.ref("taller/inventory/" + barcode.replace(/[.#$\\[\\]]/g, "_")).remove();
+                db.ref("taller/inventory/" + barcode.replace(/[.#$\[\]]/g, "_")).remove();
             } else {
                 inventoryItems = inventoryItems.filter(i => i.barcode !== barcode);
                 localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
@@ -650,45 +921,210 @@
 
     function clearAllData() {
         if (currentRole !== 'admin') return;
+        const enteredPass = prompt("ADVERTENCIA DE SEGURIDAD:\nEsta acción borrará todo el inventario y préstamos registrados.\n\nIngrese la clave de confirmación para vaciar la base de datos:");
         
-        const enteredPass = prompt("ADVERTENCIA DE SEGURIDAD:\nEsta acción borrará todas las herramientas registradas.\n\nIngrese la clave de confirmación para vaciar la base de datos:");
-        
-        if (enteredPass === null) {
-            return; // Cancelado por el usuario
-        }
-        
+        if (enteredPass === null) return;
         if (enteredPass !== DELETE_PASS) {
-            alert("Clave de seguridad incorrecta. No se realizaron cambios en la base de datos.");
+            alert("Clave de seguridad incorrecta. No se realizaron cambios.");
             return;
         }
 
         if (db) {
-            db.ref("taller/inventory").remove()
-                .then(() => alert("La base de datos ha sido vaciada con éxito."))
-                .catch(err => alert("Error al vaciar la base de datos: " + err.message));
+            db.ref("taller/inventory").remove();
+            db.ref("taller/loans").remove();
+            alert("La base de datos ha sido vaciada con éxito.");
         } else {
             inventoryItems = [];
+            loansList = [];
             localStorage.removeItem('taller_inventory');
+            localStorage.removeItem('taller_loans');
             render();
-            alert("La base de datos local ha sido vaciada con éxito.");
+            alert("La base de datos local ha sido vaciada.");
         }
     }
 
-    // 4. TABLAS Y FILTROS
+    // 4. SISTEMA DE PRÉSTAMOS Y DEVOLUCIONES
+    function openLoanModal() {
+        document.getElementById('loanModal').style.display = 'flex';
+        document.getElementById('loanBarcode').value = '';
+        document.getElementById('loanBorrower').value = '';
+        document.getElementById('preNotes').value = 'Ninguna';
+        document.getElementById('loanPreviewBanner').classList.add('hidden');
+        setTimeout(() => document.getElementById('loanBarcode').focus(), 100);
+    }
+
+    function onLoanBarcodeScan() {
+        const code = document.getElementById('loanBarcode').value.trim();
+        const banner = document.getElementById('loanPreviewBanner');
+        const item = inventoryItems.find(i => i.barcode === code);
+
+        if (item) {
+            banner.classList.remove('hidden');
+            document.getElementById('loanPreviewToolName').textContent = item.toolName + ` (${item.barcode})`;
+            document.getElementById('loanPreviewLoc').textContent = item.location || '-';
+            document.getElementById('loanPreviewStat').textContent = item.status;
+            
+            const badge = document.getElementById('loanAvailBadge');
+            if (item.isLoaned) {
+                badge.className = 'badge badge-bad';
+                badge.textContent = `Ya prestada a: ${item.currentBorrower || 'Otro técnico'}`;
+            } else {
+                badge.className = 'badge badge-exc';
+                badge.textContent = 'Disponible para préstamo';
+            }
+        } else {
+            banner.classList.add('hidden');
+        }
+    }
+
+    function confirmLoan() {
+        const code = document.getElementById('loanBarcode').value.trim();
+        const borrower = document.getElementById('loanBorrower').value.trim();
+
+        if (!code) { alert("Escanea o ingresa el código de la herramienta."); return; }
+        if (!borrower) { alert("Ingresa el nombre del responsable / técnico solicitante."); return; }
+
+        const item = inventoryItems.find(i => i.barcode === code);
+        if (!item) {
+            alert("Herramienta no registrada en el inventario. Regístrala primero.");
+            return;
+        }
+        if (item.isLoaned) {
+            alert(`Esta herramienta ya figura como prestada a ${item.currentBorrower}.`);
+            return;
+        }
+
+        const loanId = "LOAN_" + Date.now();
+        const loanRecord = {
+            id: loanId,
+            barcode: code,
+            toolName: item.toolName,
+            borrower: borrower,
+            loanDate: getNowString(),
+            returnDate: "-",
+            status: "Prestada",
+            preCheck: {
+                state: document.getElementById('preState').value,
+                cable: document.getElementById('preCable').value,
+                mandril: document.getElementById('preMandril').value,
+                switchState: document.getElementById('preSwitch').value,
+                notes: document.getElementById('preNotes').value.trim() || 'Ninguna'
+            },
+            postCheck: null
+        };
+
+        // Actualizar herramienta en inventario
+        item.isLoaned = true;
+        item.currentBorrower = borrower;
+
+        if (db) {
+            db.ref("taller/loans/" + loanId).set(loanRecord);
+            db.ref("taller/inventory/" + code.replace(/[.#$\[\]]/g, "_")).set(item);
+        } else {
+            loansList.unshift(loanRecord);
+            localStorage.setItem('taller_loans', JSON.stringify(loansList));
+            localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
+            render();
+        }
+
+        closeModal('loanModal');
+        alert(`Préstamo registrado exitosamente para ${borrower}.`);
+    }
+
+    function openReturnModal() {
+        document.getElementById('returnModal').style.display = 'flex';
+        document.getElementById('returnBarcode').value = '';
+        document.getElementById('postNotes').value = 'Ninguna';
+        document.getElementById('returnPreviewBanner').classList.add('hidden');
+        setTimeout(() => document.getElementById('returnBarcode').focus(), 100);
+    }
+
+    function onReturnBarcodeScan() {
+        const code = document.getElementById('returnBarcode').value.trim();
+        const banner = document.getElementById('returnPreviewBanner');
+        const activeLoan = loansList.find(l => l.barcode === code && l.status === 'Prestada');
+
+        if (activeLoan) {
+            banner.classList.remove('hidden');
+            document.getElementById('returnPreviewToolName').textContent = activeLoan.toolName + ` (${activeLoan.barcode})`;
+            document.getElementById('returnBorrowerName').textContent = activeLoan.borrower;
+            document.getElementById('returnLoanDate').textContent = activeLoan.loanDate;
+        } else {
+            banner.classList.add('hidden');
+        }
+    }
+
+    function confirmReturn() {
+        const code = document.getElementById('returnBarcode').value.trim();
+        if (!code) { alert("Escanea o ingresa el código a devolver."); return; }
+
+        const activeLoan = loansList.find(l => l.barcode === code && l.status === 'Prestada');
+        if (!activeLoan) {
+            alert("No se encontró un préstamo activo para esta herramienta.");
+            return;
+        }
+
+        const postState = document.getElementById('postState').value;
+        const postCable = document.getElementById('postCable').value;
+        const postMandril = document.getElementById('postMandril').value;
+        const postSwitch = document.getElementById('postSwitch').value;
+        const postNotes = document.getElementById('postNotes').value.trim() || 'Ninguna';
+
+        activeLoan.returnDate = getNowString();
+        activeLoan.status = "Devuelto";
+        activeLoan.postCheck = {
+            state: postState,
+            cable: postCable,
+            mandril: postMandril,
+            switchState: postSwitch,
+            notes: postNotes
+        };
+
+        // Actualizar herramienta en inventario
+        const item = inventoryItems.find(i => i.barcode === code);
+        if (item) {
+            item.isLoaned = false;
+            item.currentBorrower = "";
+            if (postState === "Averiado / Dañado") item.status = "Mal estado";
+            else if (postState === "En Mantenimiento") item.status = "En Mantenimiento";
+            else item.status = "Excelente";
+        }
+
+        if (db) {
+            db.ref("taller/loans/" + activeLoan.id).set(activeLoan);
+            if (item) db.ref("taller/inventory/" + code.replace(/[.#$\[\]]/g, "_")).set(item);
+        } else {
+            localStorage.setItem('taller_loans', JSON.stringify(loansList));
+            localStorage.setItem('taller_inventory', JSON.stringify(inventoryItems));
+            render();
+        }
+
+        closeModal('returnModal');
+        alert("Herramienta devuelta e inspección guardada con éxito.");
+    }
+
+    // 5. DASHBOARD Y REPORTES (KPIS)
     function render() {
-        renderStats();
+        renderKPIs();
         renderSummaryTable();
+        renderLoansTable();
         applyFilters();
     }
 
-    function renderStats() {
+    function renderKPIs() {
         const total = inventoryItems.length;
-        document.getElementById('statsBar').innerHTML = `
-            <div class="stat-item">
-                <div class="stat-lbl">Herramientas Registradas</div>
-                <div class="stat-num primary">${total}</div>
-            </div>
-        `;
+        const prestadas = inventoryItems.filter(i => i.isLoaned).length;
+        const operativas = inventoryItems.filter(i => !i.isLoaned && (i.status === 'Excelente' || i.status === 'Moderado' || i.status === 'Operativo')).length;
+        const averiadas = inventoryItems.filter(i => i.status === 'Mal estado' || i.status === 'Averiado').length;
+        const mantenimiento = inventoryItems.filter(i => i.status === 'En Mantenimiento').length;
+        const faltantes = prestadas; // Herramientas que están fuera del taller actualmente
+
+        document.getElementById('kpiTotal').textContent = total;
+        document.getElementById('kpiOperativas').textContent = operativas;
+        document.getElementById('kpiPrestadas').textContent = prestadas;
+        document.getElementById('kpiAveriadas').textContent = averiadas;
+        document.getElementById('kpiMantenimiento').textContent = mantenimiento;
+        document.getElementById('kpiFaltantes').textContent = faltantes;
     }
 
     function renderSummaryTable() {
@@ -699,25 +1135,26 @@
 
         let headerRow = '<tr><th>Herramienta</th>';
         statusesList.forEach(st => headerRow += `<th class="text-center">${st}</th>`);
-        headerRow += '<th class="text-center">Total</th></tr>';
+        headerRow += '<th class="text-center">Prestadas</th><th class="text-center">Total Registradas</th></tr>';
         header.innerHTML = headerRow;
 
         if (inventoryItems.length === 0) {
-            body.innerHTML = `<tr><td colspan="${statusesList.length + 2}" class="text-center" style="color:var(--text-muted);">No hay herramientas registradas</td></tr>`;
+            body.innerHTML = `<tr><td colspan="${statusesList.length + 3}" class="text-center" style="color:var(--text-muted);">No hay herramientas registradas</td></tr>`;
             return;
         }
 
         const counts = {};
         inventoryItems.forEach(i => {
             if (!counts[i.toolName]) {
-                counts[i.toolName] = { total: 0 };
+                counts[i.toolName] = { total: 0, prestadas: 0 };
                 statusesList.forEach(st => counts[i.toolName][st] = 0);
             }
             if (counts[i.toolName][i.status] !== undefined) counts[i.toolName][i.status]++;
+            if (i.isLoaned) counts[i.toolName].prestadas++;
             counts[i.toolName].total++;
         });
 
-        Object.keys(counts).forEach(tool => {
+        Object.keys(counts).sort().forEach(tool => {
             const row = body.insertRow();
             row.insertCell(0).textContent = tool;
             statusesList.forEach((st, sIdx) => {
@@ -725,31 +1162,86 @@
                 cell.className = "text-center";
                 cell.innerHTML = `<span class="badge ${getBadgeClass(st)}">${counts[tool][st] || 0}</span>`;
             });
-            const cTot = row.insertCell(statusesList.length + 1);
+            const cPrest = row.insertCell(statusesList.length + 1);
+            cPrest.className = "text-center";
+            cPrest.innerHTML = `<span class="badge badge-loan">${counts[tool].prestadas}</span>`;
+
+            const cTot = row.insertCell(statusesList.length + 2);
             cTot.className = "text-center";
             cTot.style.fontWeight = "bold";
             cTot.textContent = counts[tool].total;
         });
     }
 
+    function renderLoansTable() {
+        const body = document.getElementById('loansBody');
+        body.innerHTML = '';
+
+        if (loansList.length === 0) {
+            body.innerHTML = `<tr><td colspan="8" class="text-center" style="color:var(--text-muted);">No hay historial de préstamos</td></tr>`;
+            return;
+        }
+
+        loansList.forEach(l => {
+            const row = body.insertRow();
+            row.insertCell(0).textContent = l.loanDate;
+            row.insertCell(1).innerHTML = `<strong style="font-family: monospace;">${l.barcode}</strong>`;
+            row.insertCell(2).textContent = l.toolName;
+            row.insertCell(3).innerHTML = `<strong>${l.borrower}</strong>`;
+            
+            // Inspección previa
+            const pre = l.preCheck || {};
+            row.insertCell(4).innerHTML = `<span style="font-size:0.75rem;">Est: <b>${pre.state||'-'}</b> | Cable: <b>${pre.cable||'-'}</b> | Mandril: <b>${pre.mandril||'-'}</b> | Int: <b>${pre.switchState||'-'}</b><br>Obs: <i>${pre.notes||'-'}</i></span>`;
+
+            row.insertCell(5).textContent = l.returnDate || "-";
+
+            // Inspección posterior
+            if (l.postCheck) {
+                const post = l.postCheck;
+                row.insertCell(6).innerHTML = `<span style="font-size:0.75rem;">Est: <b>${post.state||'-'}</b> | Cable: <b>${post.cable||'-'}</b> | Mandril: <b>${post.mandril||'-'}</b> | Int: <b>${post.switchState||'-'}</b><br>Obs: <i>${post.notes||'-'}</i></span>`;
+            } else {
+                row.insertCell(6).innerHTML = `<span style="color:var(--text-muted); font-size:0.78rem;">Pendiente de retorno</span>`;
+            }
+
+            const statusCell = row.insertCell(7);
+            statusCell.className = "text-center";
+            if (l.status === 'Prestada') {
+                statusCell.innerHTML = `<span class="badge badge-loan">En Préstamo</span>`;
+            } else {
+                statusCell.innerHTML = `<span class="badge badge-exc">Devuelto</span>`;
+            }
+        });
+    }
+
+    // 6. FILTROS Y ORDENAMIENTO ALFABÉTICO
     function applyFilters() {
         const search = document.getElementById('globalSearch').value.toLowerCase().trim();
         const fTool = document.getElementById('filterTool').value;
         const fStatus = document.getElementById('filterStatus').value;
         const fLoc = document.getElementById('filterLocation').value;
+        const sortOrder = document.getElementById('filterSortOrder').value;
 
         filteredItemsCache = inventoryItems.filter(item => {
             const matchSearch = !search || 
                 item.barcode.toLowerCase().includes(search) || 
                 item.toolName.toLowerCase().includes(search) || 
                 (item.notes && item.notes.toLowerCase().includes(search)) ||
-                (item.location && item.location.toLowerCase().includes(search));
+                (item.location && item.location.toLowerCase().includes(search)) ||
+                (item.currentBorrower && item.currentBorrower.toLowerCase().includes(search));
 
             const matchTool = !fTool || item.toolName === fTool;
             const matchStatus = !fStatus || item.status === fStatus;
             const matchLoc = !fLoc || item.location === fLoc;
 
             return matchSearch && matchTool && matchStatus && matchLoc;
+        });
+
+        // Ordenamiento
+        filteredItemsCache.sort((a, b) => {
+            if (sortOrder === 'name_asc') return a.toolName.localeCompare(b.toolName);
+            if (sortOrder === 'name_desc') return b.toolName.localeCompare(a.toolName);
+            if (sortOrder === 'time_asc') return a.timestamp.localeCompare(b.timestamp);
+            return b.timestamp.localeCompare(a.timestamp); // time_desc por defecto
         });
 
         renderDetailTable();
@@ -761,7 +1253,7 @@
         document.getElementById('tabCount').textContent = filteredItemsCache.length;
 
         if (filteredItemsCache.length === 0) {
-            body.innerHTML = `<tr><td colspan="${currentRole === 'admin' ? 7 : 6}" class="text-center" style="color:var(--text-muted);">No se encontraron herramientas</td></tr>`;
+            body.innerHTML = `<tr><td colspan="${currentRole === 'admin' ? 8 : 7}" class="text-center" style="color:var(--text-muted);">No se encontraron herramientas</td></tr>`;
             return;
         }
 
@@ -771,18 +1263,27 @@
             row.insertCell(1).innerHTML = `<strong style="font-family: monospace;">${item.barcode}</strong>`;
             row.insertCell(2).textContent = item.toolName;
             row.insertCell(3).innerHTML = `<span class="badge ${getBadgeClass(item.status)}">${item.status}</span>`;
-            row.insertCell(4).textContent = item.location || "-";
-            row.insertCell(5).textContent = item.notes || "-";
+            
+            // Disponibilidad / Préstamo
+            const dispCell = row.insertCell(4);
+            if (item.isLoaned) {
+                dispCell.innerHTML = `<span class="badge badge-loan">Prestada a: ${item.currentBorrower || 'Técnico'}</span>`;
+            } else {
+                dispCell.innerHTML = `<span class="badge badge-exc">En Taller</span>`;
+            }
+
+            row.insertCell(5).textContent = item.location || "-";
+            row.insertCell(6).textContent = item.notes || "-";
 
             if (currentRole === 'admin') {
-                const actCell = row.insertCell(6);
+                const actCell = row.insertCell(7);
                 actCell.className = "text-center admin-only";
                 actCell.innerHTML = `<button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteItem('${item.barcode}')"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Borrar</button>`;
             }
         });
     }
 
-    // 5. GENERADOR MASIVO
+    // 7. GENERADOR MASIVO DE CÓDIGOS
     function openBatchGeneratorModal() {
         document.getElementById('batchGeneratorModal').style.display = 'flex';
         renderBatchPreview();
@@ -846,7 +1347,7 @@
         setTimeout(() => window.print(), 150);
     }
 
-    // UTILIDADES GENERALES (INYECCIÓN DIRECTA DE OPCIONES)
+    // UTILIDADES GENERALES
     function populateSelect(id, array, defaultOption = null) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -858,9 +1359,7 @@
         
         if (Array.isArray(array)) {
             array.forEach(item => {
-                if (item) {
-                    html += `<option value="${item}">${item}</option>`;
-                }
+                if (item) html += `<option value="${item}">${item}</option>`;
             });
         }
         
@@ -881,9 +1380,10 @@
     }
 
     function getBadgeClass(st) {
-        if (st === "Excelente") return "badge-exc";
-        if (st === "Moderado") return "badge-mod";
-        if (st === "Mal estado") return "badge-bad";
+        if (st === "Excelente" || st === "Operativo") return "badge-exc";
+        if (st === "Moderado" || st === "Regular") return "badge-mod";
+        if (st === "Mal estado" || st === "Averiado") return "badge-bad";
+        if (st === "En Mantenimiento") return "badge-bad";
         return "badge-gen";
     }
 
@@ -897,8 +1397,11 @@
 
     function switchTab(tab) {
         document.getElementById('tabDetail').style.display = tab === 'detail' ? 'block' : 'none';
+        document.getElementById('tabLoans').style.display = tab === 'loans' ? 'block' : 'none';
         document.getElementById('tabSummary').style.display = tab === 'summary' ? 'block' : 'none';
+
         document.getElementById('tabBtnDetail').classList.toggle('active', tab === 'detail');
+        document.getElementById('tabBtnLoans').classList.toggle('active', tab === 'loans');
         document.getElementById('tabBtnSummary').classList.toggle('active', tab === 'summary');
     }
 
@@ -907,14 +1410,15 @@
         document.getElementById('filterTool').value = '';
         document.getElementById('filterStatus').value = '';
         document.getElementById('filterLocation').value = '';
+        document.getElementById('filterSortOrder').value = 'time_desc';
         applyFilters();
     }
 
     function exportToCSV() {
         if (inventoryItems.length === 0) { alert("No hay datos para exportar."); return; }
-        let csv = "sep=;\nFechaHora;Codigo;Herramienta;Estado;Ubicacion;Observaciones\n";
+        let csv = "sep=;\nFechaHora;Codigo;Herramienta;Estado;Ubicacion;Prestada;Solicitante;Observaciones\n";
         inventoryItems.forEach(i => {
-            csv += `"${i.timestamp}";="${i.barcode}";"${i.toolName}";"${i.status}";"${i.location}";"${i.notes || '-'}"\n`;
+            csv += `"${i.timestamp}";="${i.barcode}";"${i.toolName}";"${i.status}";"${i.location}";"${i.isLoaned ? 'SI' : 'NO'}";"${i.currentBorrower || '-'}";"${i.notes || '-'}"\n`;
         });
         const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
@@ -935,7 +1439,7 @@
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // Modales de listas
+    // Modales de configuración de listas
     function openToolManagerModal() { document.getElementById('toolManagerModal').style.display = 'flex'; renderToolList(); }
     function renderToolList() {
         const container = document.getElementById('toolMgmtList');
